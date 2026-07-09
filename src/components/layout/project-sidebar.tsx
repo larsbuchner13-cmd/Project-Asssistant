@@ -2,14 +2,24 @@
 
 import { useTranslations } from "next-intl";
 import { LayoutDashboard, Lock } from "lucide-react";
+import type { Framework } from "@prisma/client";
 
 import { Link, usePathname } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
-import { projectNavGroups } from "@/lib/nav-config";
+import { getProjectNavGroups } from "@/lib/nav-config";
 
-export function ProjectSidebar({ projectId, projectName }: { projectId: string; projectName: string }) {
+export function ProjectSidebar({
+  projectId,
+  projectName,
+  framework,
+}: {
+  projectId: string;
+  projectName: string;
+  framework: Framework;
+}) {
   const t = useTranslations("nav");
   const pathname = usePathname();
+  const projectNavGroups = getProjectNavGroups(framework);
 
   return (
     <nav className="no-print flex h-full w-64 shrink-0 flex-col border-r border-border bg-card/50 p-4">

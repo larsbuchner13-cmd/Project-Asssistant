@@ -23,6 +23,13 @@
     "changeRequests": "Change Requests",
     "lessonsLearned": "Lessons Learned",
     "closureChecklist": "Closure Checklist",
+    "businessCase": "Business Case",
+    "stageGates": "Stage Gates",
+    "tolerances": "Tolerances",
+    "backlog": "Product Backlog",
+    "sprintPlanning": "Sprint Planning",
+    "sprintBoard": "Sprint Board",
+    "burndown": "Burndown Chart",
     "backToDashboard": "Back to Dashboard"
   },
   "dashboard": {
@@ -304,5 +311,71 @@
       "resourcesReleased": "Resources have been released",
       "sponsorSignoff": "Sponsor sign-off obtained"
     }
+  },
+  "businessCase": {
+    "title": "Business Case",
+    "guideText": "PRINCE2: Outline / Develop Business Case. Justifies why the project is worthwhile and is refined throughout the project.",
+    "reasons": "Reasons",
+    "options": "Options",
+    "expectedBenefits": "Expected Benefits",
+    "expectedDisBenefits": "Expected Dis-benefits",
+    "costsSummary": "Costs Summary",
+    "majorRisks": "Major Risks",
+    "documentTitle": "Business Case Document"
+  },
+  "stageGates": {
+    "title": "Stage Gates",
+    "guideText": "PRINCE2: Managing a Stage Boundary. Each stage ends with a review against a checklist before the next stage is authorized.",
+    "addStageGate": "Add Stage Gate",
+    "endDate": "Stage End Date",
+    "approved": "Approved",
+    "pending": "Pending",
+    "approveGate": "Approve Stage Gate",
+    "addChecklistItem": "Add Checklist Item",
+    "noStageGates": "No stage gates yet"
+  },
+  "tolerances": {
+    "title": "Tolerances",
+    "guideText": "PRINCE2: Tolerances define the permitted deviation for each target before escalation is required.",
+    "time": "Time",
+    "cost": "Cost",
+    "scope": "Scope",
+    "risk": "Risk",
+    "quality": "Quality",
+    "benefits": "Benefits"
+  },
+  "backlog": {
+    "title": "Product Backlog",
+    "guideText": "Scrum: Product Backlog Management. A prioritized list of desired features, estimated in story points.",
+    "addItem": "Add Item",
+    "storyPoints": "Story Points",
+    "totalStoryPoints": "Total Story Points",
+    "sprint": "Sprint",
+    "noSprint": "No Sprint"
+  },
+  "sprintPlanning": {
+    "title": "Sprint Planning",
+    "guideText": "Scrum: Sprint Planning. Create sprints with a timebox and goal, and assign backlog items to them.",
+    "addSprint": "Add Sprint",
+    "goal": "Sprint Goal",
+    "totalPoints": "Story Points",
+    "noItems": "No items in this sprint yet",
+    "unassignedItems": "Unassigned Items",
+    "assignTo": "Assign to Sprint",
+    "unassign": "Remove from Sprint",
+    "noSprints": "No sprints yet"
+  },
+  "sprintBoard": {
+    "title": "Sprint Board",
+    "guideText": "Scrum: Sprint Backlog / Daily Scrum. Track progress of the items committed to the sprint across Backlog, In Progress, Review, and Done."
+  },
+  "burndown": {
+    "title": "Burndown Chart",
+    "guideText": "Scrum: Track sprint progress. Compares ideal vs. actual remaining work (story points) over the sprint.",
+    "ideal": "Ideal",
+    "actual": "Actual",
+    "totalPoints": "Total Story Points",
+    "noPoints": "No story points in this sprint",
+    "notStarted": "Sprint hasn't started yet"
   }
 }

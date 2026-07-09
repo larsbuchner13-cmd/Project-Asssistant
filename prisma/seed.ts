@@ -395,7 +395,7 @@ async function seedScrumProject() {
 
   await prisma.backlogItem.createMany({
     data: [
-      { projectId: project.id, sprintId: project.sprints[0].id, title: "User Login", storyPoints: 5, status: "DONE", priority: "HIGH", order: 0 },
+      { projectId: project.id, sprintId: project.sprints[0].id, title: "User Login", storyPoints: 5, status: "DONE", priority: "HIGH", order: 0, completedAt: daysFromNow(-9) },
       { projectId: project.id, sprintId: project.sprints[0].id, title: "Onboarding Flow", storyPoints: 8, status: "IN_PROGRESS", priority: "HIGH", order: 1 },
       { projectId: project.id, title: "Push Notifications", storyPoints: 5, status: "BACKLOG", priority: "MEDIUM", order: 2 },
       { projectId: project.id, title: "Dashboard Widgets", storyPoints: 13, status: "BACKLOG", priority: "MEDIUM", order: 3 },

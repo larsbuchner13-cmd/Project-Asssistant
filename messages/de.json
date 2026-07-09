@@ -23,6 +23,13 @@
     "changeRequests": "Änderungsanträge",
     "lessonsLearned": "Lessons Learned",
     "closureChecklist": "Abschluss-Checkliste",
+    "businessCase": "Business Case",
+    "stageGates": "Stage Gates",
+    "tolerances": "Toleranzen",
+    "backlog": "Product Backlog",
+    "sprintPlanning": "Sprint-Planung",
+    "sprintBoard": "Sprint-Board",
+    "burndown": "Burndown-Chart",
     "backToDashboard": "Zurück zur Übersicht"
   },
   "dashboard": {
@@ -304,5 +311,71 @@
       "resourcesReleased": "Ressourcen wurden freigegeben",
       "sponsorSignoff": "Sponsor-Freigabe liegt vor"
     }
+  },
+  "businessCase": {
+    "title": "Business Case",
+    "guideText": "PRINCE2: Outline Business Case / Business Case verfeinern. Begründet, warum sich das Projekt lohnt, und wird über den gesamten Projektverlauf aktualisiert.",
+    "reasons": "Gründe",
+    "options": "Optionen",
+    "expectedBenefits": "Erwarteter Nutzen",
+    "expectedDisBenefits": "Erwartete Nachteile",
+    "costsSummary": "Kostenübersicht",
+    "majorRisks": "Wesentliche Risiken",
+    "documentTitle": "Business-Case-Dokument"
+  },
+  "stageGates": {
+    "title": "Stage Gates",
+    "guideText": "PRINCE2: Managing a Stage Boundary. Jede Phase endet mit einer Prüfung anhand einer Checkliste, bevor die nächste Phase freigegeben wird.",
+    "addStageGate": "Stage Gate hinzufügen",
+    "endDate": "Enddatum der Phase",
+    "approved": "Genehmigt",
+    "pending": "Ausstehend",
+    "approveGate": "Stage Gate genehmigen",
+    "addChecklistItem": "Prüfpunkt hinzufügen",
+    "noStageGates": "Noch keine Stage Gates angelegt"
+  },
+  "tolerances": {
+    "title": "Toleranzen",
+    "guideText": "PRINCE2: Toleranzen definieren den erlaubten Abweichungsspielraum je Zielgröße, bevor eskaliert werden muss.",
+    "time": "Zeit",
+    "cost": "Kosten",
+    "scope": "Umfang",
+    "risk": "Risiko",
+    "quality": "Qualität",
+    "benefits": "Nutzen"
+  },
+  "backlog": {
+    "title": "Product Backlog",
+    "guideText": "Scrum: Product Backlog Management. Priorisierte Liste aller gewünschten Funktionen, geschätzt in Story Points.",
+    "addItem": "Eintrag hinzufügen",
+    "storyPoints": "Story Points",
+    "totalStoryPoints": "Story Points gesamt",
+    "sprint": "Sprint",
+    "noSprint": "Kein Sprint"
+  },
+  "sprintPlanning": {
+    "title": "Sprint-Planung",
+    "guideText": "Scrum: Sprint Planning. Lege Sprints mit Zeitraum und Sprintziel an und ordne Backlog-Einträge zu.",
+    "addSprint": "Sprint hinzufügen",
+    "goal": "Sprintziel",
+    "totalPoints": "Story Points",
+    "noItems": "Noch keine Einträge in diesem Sprint",
+    "unassignedItems": "Nicht zugeordnete Einträge",
+    "assignTo": "Sprint zuordnen",
+    "unassign": "Aus Sprint entfernen",
+    "noSprints": "Noch keine Sprints angelegt"
+  },
+  "sprintBoard": {
+    "title": "Sprint-Board",
+    "guideText": "Scrum: Sprint Backlog / Daily Scrum. Verfolge den Fortschritt der für den Sprint zugesagten Einträge über Backlog, In Bearbeitung, Review und Erledigt."
+  },
+  "burndown": {
+    "title": "Burndown-Chart",
+    "guideText": "Scrum: Sprint-Fortschritt verfolgen. Vergleicht den idealen mit dem tatsächlichen Restaufwand (Story Points) über den Sprintverlauf.",
+    "ideal": "Ideal",
+    "actual": "Tatsächlich",
+    "totalPoints": "Story Points gesamt",
+    "noPoints": "Keine Story Points im Sprint",
+    "notStarted": "Sprint hat noch nicht begonnen"
   }
 }

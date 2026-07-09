@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 
 import { prisma } from "@/lib/prisma";
+import { requireProjectAccess } from "@/lib/authz";
 import { backlogItemFormSchema, type BacklogItemFormValues } from "@/lib/validations/backlog-item";
 
 function toData(parsed: BacklogItemFormValues) {
@@ -25,6 +26,7 @@ function revalidate(projectId: string) {
 }
 
 export async function createBacklogItem(projectId: string, values: BacklogItemFormValues) {
+  await requireProjectAccess(projectId);
   const parsed = backlogItemFormSchema.parse(values);
   const count = await prisma.backlogItem.count({ where: { projectId } });
   const item = await prisma.backlogItem.create({
@@ -35,6 +37,7 @@ export async function createBacklogItem(projectId: string, values: BacklogItemFo
 }
 
 export async function updateBacklogItem(projectId: string, id: string, values: BacklogItemFormValues) {
+  await requireProjectAccess(projectId);
   const parsed = backlogItemFormSchema.parse(values);
   const item = await prisma.backlogItem.update({ where: { id }, data: toData(parsed) });
   revalidate(projectId);
@@ -42,11 +45,13 @@ export async function updateBacklogItem(projectId: string, id: string, values: B
 }
 
 export async function deleteBacklogItem(projectId: string, id: string) {
+  await requireProjectAccess(projectId);
   await prisma.backlogItem.delete({ where: { id } });
   revalidate(projectId);
 }
 
 export async function assignToSprint(projectId: string, id: string, sprintId: string | null) {
+  await requireProjectAccess(projectId);
   await prisma.backlogItem.update({ where: { id }, data: { sprintId } });
   revalidate(projectId);
 }
@@ -57,6 +62,7 @@ export async function moveBacklogItemStatus(
   status: BacklogItemFormValues["status"],
   orderedIdsInColumn: string[]
 ) {
+  await requireProjectAccess(projectId);
   await prisma.backlogItem.update({
     where: { id },
     data: { status, completedAt: status === "DONE" ? new Date() : null },

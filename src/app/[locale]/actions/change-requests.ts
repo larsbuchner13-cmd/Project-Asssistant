@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 
 import { prisma } from "@/lib/prisma";
+import { requireProjectAccess } from "@/lib/authz";
 import { changeRequestFormSchema, type ChangeRequestFormValues } from "@/lib/validations/change-request";
 
 function toData(parsed: ChangeRequestFormValues) {
@@ -18,6 +19,7 @@ function toData(parsed: ChangeRequestFormValues) {
 }
 
 export async function createChangeRequest(projectId: string, values: ChangeRequestFormValues) {
+  await requireProjectAccess(projectId);
   const parsed = changeRequestFormSchema.parse(values);
   const cr = await prisma.changeRequest.create({ data: { projectId, ...toData(parsed) } });
   revalidatePath(`/projects/${projectId}/monitoring/change-requests`);
@@ -25,6 +27,7 @@ export async function createChangeRequest(projectId: string, values: ChangeReque
 }
 
 export async function updateChangeRequest(projectId: string, id: string, values: ChangeRequestFormValues) {
+  await requireProjectAccess(projectId);
   const parsed = changeRequestFormSchema.parse(values);
   const cr = await prisma.changeRequest.update({ where: { id }, data: toData(parsed) });
   revalidatePath(`/projects/${projectId}/monitoring/change-requests`);
@@ -32,6 +35,7 @@ export async function updateChangeRequest(projectId: string, id: string, values:
 }
 
 export async function deleteChangeRequest(projectId: string, id: string) {
+  await requireProjectAccess(projectId);
   await prisma.changeRequest.delete({ where: { id } });
   revalidatePath(`/projects/${projectId}/monitoring/change-requests`);
 }

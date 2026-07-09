@@ -2,15 +2,19 @@
 
 import { useTranslations, useLocale } from "next-intl";
 import { useTheme } from "next-themes";
-import { Moon, Sun } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { Moon, Sun, ShieldCheck } from "lucide-react";
 
-import { usePathname, useRouter } from "@/i18n/navigation";
+import { usePathname, useRouter, Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
+import { SignOutButton } from "@/components/auth/sign-out-button";
 import { locales } from "@/i18n/config";
 
 export function Topbar() {
   const t = useTranslations("app");
+  const tAuth = useTranslations("auth");
   const { theme, setTheme } = useTheme();
+  const { data: session } = useSession();
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
@@ -44,6 +48,20 @@ export function Topbar() {
           <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
           <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
         </Button>
+        {session?.user && (
+          <>
+            {session.user.role === "ADMIN" && (
+              <Button asChild variant="ghost" size="sm">
+                <Link href="/admin/users">
+                  <ShieldCheck />
+                  {tAuth("adminArea")}
+                </Link>
+              </Button>
+            )}
+            <span className="hidden text-sm text-muted-foreground sm:inline">{session.user.email}</span>
+            <SignOutButton size="sm" />
+          </>
+        )}
       </div>
     </header>
   );

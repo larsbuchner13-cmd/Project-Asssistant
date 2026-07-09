@@ -3,9 +3,11 @@
 import { revalidatePath } from "next/cache";
 
 import { prisma } from "@/lib/prisma";
+import { requireProjectAccess } from "@/lib/authz";
 import { toleranceFormSchema, type ToleranceFormValues } from "@/lib/validations/tolerance";
 
 export async function upsertTolerance(projectId: string, values: ToleranceFormValues) {
+  await requireProjectAccess(projectId);
   const parsed = toleranceFormSchema.parse(values);
 
   const data = {

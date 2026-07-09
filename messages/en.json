@@ -172,6 +172,9 @@
   "validation": {
     "required": "This field is required",
     "minLength": "Too short",
+    "minLength8": "At least 8 characters",
+    "email": "Invalid email address",
+    "passwordMismatch": "Passwords do not match",
     "number": "Must be a number",
     "min": "Value too low",
     "max": "Value too high"
@@ -368,6 +371,45 @@
   "sprintBoard": {
     "title": "Sprint Board",
     "guideText": "Scrum: Sprint Backlog / Daily Scrum. Track progress of the items committed to the sprint across Backlog, In Progress, Review, and Done."
+  },
+  "auth": {
+    "signIn": "Sign in",
+    "signInSubtitle": "Sign in with your account credentials.",
+    "signOut": "Sign out",
+    "createAccount": "Create account",
+    "registerSubtitle": "Register for an account – an administrator needs to approve it afterwards.",
+    "email": "Email address",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "noAccount": "Don't have an account?",
+    "haveAccount": "Already have an account?",
+    "invalidCredentials": "Email or password is incorrect.",
+    "emailTaken": "This email address is already registered.",
+    "registerFailed": "Registration failed. Please try again.",
+    "adminArea": "User management",
+    "pendingTitle": "Account awaiting approval",
+    "pendingSubtitle": "Your account was created and is waiting for an administrator to approve it. If you were just granted access, try signing out and back in.",
+    "disabledTitle": "Account disabled",
+    "disabledSubtitle": "An administrator has disabled your account. Contact your administrator if you believe this is a mistake."
+  },
+  "admin": {
+    "title": "User management",
+    "subtitle": "Approve users, assign roles, and manage accounts.",
+    "role": "Role",
+    "roleUser": "User",
+    "roleAdmin": "Admin",
+    "projects": "Projects",
+    "registeredAt": "Registered on",
+    "you": "you",
+    "approve": "Approve",
+    "disable": "Disable",
+    "actionFailed": "Action failed. Please try again.",
+    "cannotModifySelf": "You cannot change your own role or status.",
+    "userStatus": {
+      "PENDING": "Awaiting approval",
+      "ACTIVE": "Active",
+      "DISABLED": "Disabled"
+    }
   },
   "burndown": {
     "title": "Burndown Chart",

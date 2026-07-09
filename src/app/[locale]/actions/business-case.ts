@@ -3,9 +3,11 @@
 import { revalidatePath } from "next/cache";
 
 import { prisma } from "@/lib/prisma";
+import { requireProjectAccess } from "@/lib/authz";
 import { businessCaseFormSchema, type BusinessCaseFormValues } from "@/lib/validations/business-case";
 
 export async function upsertBusinessCase(projectId: string, values: BusinessCaseFormValues) {
+  await requireProjectAccess(projectId);
   const parsed = businessCaseFormSchema.parse(values);
 
   const data = {

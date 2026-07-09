@@ -1,13 +1,19 @@
 import { getTranslations } from "next-intl/server";
 
 import { prisma } from "@/lib/prisma";
+import { requireActiveUser } from "@/lib/authz";
 import { ProjectCard } from "@/components/projects/project-card";
 import { NewProjectDialog } from "@/components/projects/new-project-dialog";
 
+// Session- and owner-scoped: must never be served from a shared static cache.
+export const dynamic = "force-dynamic";
+
 export default async function DashboardPage() {
   const t = await getTranslations("dashboard");
+  const user = await requireActiveUser();
 
   const projects = await prisma.project.findMany({
+    where: user.role === "ADMIN" ? undefined : { ownerId: user.id },
     orderBy: { createdAt: "desc" },
     include: {
       milestones: { where: { achieved: false }, orderBy: { dueDate: "asc" }, take: 1 },

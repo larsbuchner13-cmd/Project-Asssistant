@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
@@ -9,9 +10,40 @@ function daysFromNow(days: number) {
   return d;
 }
 
-async function seedPmbokProject() {
+async function seedUsers() {
+  const password = await bcrypt.hash("changeme123", 12);
+
+  const admin = await prisma.user.upsert({
+    where: { email: "admin@pmcopilot.local" },
+    update: {},
+    create: {
+      name: "Admin",
+      email: "admin@pmcopilot.local",
+      password,
+      role: "ADMIN",
+      status: "ACTIVE",
+    },
+  });
+
+  const member = await prisma.user.upsert({
+    where: { email: "member@pmcopilot.local" },
+    update: {},
+    create: {
+      name: "Team Mitglied",
+      email: "member@pmcopilot.local",
+      password,
+      role: "USER",
+      status: "ACTIVE",
+    },
+  });
+
+  return { admin, member };
+}
+
+async function seedPmbokProject(ownerId: string) {
   const project = await prisma.project.create({
     data: {
+      ownerId,
       name: "Website Relaunch",
       description: "Redesign and rebuild the public marketing website on a new stack.",
       framework: "PMBOK",
@@ -232,9 +264,10 @@ async function seedPmbokProject() {
   return project;
 }
 
-async function seedPrince2Project() {
+async function seedPrince2Project(ownerId: string) {
   const project = await prisma.project.create({
     data: {
+      ownerId,
       name: "ERP Migration",
       description: "Migration from on-premise ERP to a cloud-based platform.",
       framework: "PRINCE2",
@@ -335,9 +368,10 @@ async function seedPrince2Project() {
   return project;
 }
 
-async function seedScrumProject() {
+async function seedScrumProject(ownerId: string) {
   const project = await prisma.project.create({
     data: {
+      ownerId,
       name: "Mobile App MVP",
       description: "Build and launch the first MVP of the companion mobile app.",
       framework: "SCRUM",
@@ -407,10 +441,12 @@ async function seedScrumProject() {
 
 async function main() {
   console.log("Seeding database...");
-  await seedPmbokProject();
-  await seedPrince2Project();
-  await seedScrumProject();
+  const { admin, member } = await seedUsers();
+  await seedPmbokProject(admin.id);
+  await seedPrince2Project(admin.id);
+  await seedScrumProject(member.id);
   console.log("Seed complete.");
+  console.log("Login as admin@pmcopilot.local / member@pmcopilot.local, password: changeme123");
 }
 
 main()

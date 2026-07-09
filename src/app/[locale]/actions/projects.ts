@@ -3,9 +3,11 @@
 import { revalidatePath } from "next/cache";
 
 import { prisma } from "@/lib/prisma";
+import { requireActiveUser } from "@/lib/authz";
 import { projectFormSchema, type ProjectFormValues } from "@/lib/validations/project";
 
 export async function createProject(values: ProjectFormValues) {
+  const user = await requireActiveUser();
   const parsed = projectFormSchema.parse(values);
 
   const project = await prisma.project.create({
@@ -16,6 +18,7 @@ export async function createProject(values: ProjectFormValues) {
       sponsor: parsed.sponsor || null,
       startDate: new Date(parsed.startDate),
       endDate: parsed.endDate ? new Date(parsed.endDate) : null,
+      ownerId: user.id,
     },
   });
 

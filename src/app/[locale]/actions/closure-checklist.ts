@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 
 import { prisma } from "@/lib/prisma";
+import { requireProjectAccess } from "@/lib/authz";
 import {
   closureChecklistItemFormSchema,
   type ClosureChecklistItemFormValues,
@@ -16,6 +17,7 @@ const DEFAULT_ITEMS: { category: string; label: string }[] = [
 ];
 
 export async function ensureDefaultChecklist(projectId: string) {
+  await requireProjectAccess(projectId);
   const count = await prisma.closureChecklistItem.count({ where: { projectId } });
   if (count > 0) return;
 
@@ -30,6 +32,7 @@ export async function ensureDefaultChecklist(projectId: string) {
 }
 
 export async function createChecklistItem(projectId: string, values: ClosureChecklistItemFormValues) {
+  await requireProjectAccess(projectId);
   const parsed = closureChecklistItemFormSchema.parse(values);
   const count = await prisma.closureChecklistItem.count({ where: { projectId } });
   const item = await prisma.closureChecklistItem.create({
@@ -40,11 +43,13 @@ export async function createChecklistItem(projectId: string, values: ClosureChec
 }
 
 export async function toggleChecklistItem(projectId: string, id: string, done: boolean) {
+  await requireProjectAccess(projectId);
   await prisma.closureChecklistItem.update({ where: { id }, data: { done } });
   revalidatePath(`/projects/${projectId}/closing/checklist`);
 }
 
 export async function deleteChecklistItem(projectId: string, id: string) {
+  await requireProjectAccess(projectId);
   await prisma.closureChecklistItem.delete({ where: { id } });
   revalidatePath(`/projects/${projectId}/closing/checklist`);
 }

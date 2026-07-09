@@ -3,9 +3,11 @@
 import { revalidatePath } from "next/cache";
 
 import { prisma } from "@/lib/prisma";
+import { requireProjectAccess } from "@/lib/authz";
 import { dependencyFormSchema, type DependencyFormValues } from "@/lib/validations/dependency";
 
 export async function createDependency(projectId: string, values: DependencyFormValues) {
+  await requireProjectAccess(projectId);
   const parsed = dependencyFormSchema.parse(values);
   const dependency = await prisma.dependency.create({ data: { projectId, ...parsed } });
   revalidatePath(`/projects/${projectId}/monitoring/raid`);
@@ -13,6 +15,7 @@ export async function createDependency(projectId: string, values: DependencyForm
 }
 
 export async function updateDependency(projectId: string, id: string, values: DependencyFormValues) {
+  await requireProjectAccess(projectId);
   const parsed = dependencyFormSchema.parse(values);
   const dependency = await prisma.dependency.update({ where: { id }, data: parsed });
   revalidatePath(`/projects/${projectId}/monitoring/raid`);
@@ -20,6 +23,7 @@ export async function updateDependency(projectId: string, id: string, values: De
 }
 
 export async function deleteDependency(projectId: string, id: string) {
+  await requireProjectAccess(projectId);
   await prisma.dependency.delete({ where: { id } });
   revalidatePath(`/projects/${projectId}/monitoring/raid`);
 }

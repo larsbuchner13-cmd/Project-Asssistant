@@ -1,0 +1,507 @@
+// PM Copilot — Prisma schema
+// Data model covering PMBOK-generic project artifacts plus PRINCE2 and Scrum
+// framework-specific extensions selected per project.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+
+enum Framework {
+  PMBOK
+  PRINCE2
+  SCRUM
+}
+
+enum ProjectStatus {
+  PLANNING
+  ACTIVE
+  ON_HOLD
+  COMPLETED
+  CANCELLED
+}
+
+enum RagStatus {
+  RED
+  AMBER
+  GREEN
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum StakeholderLevel {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum EngagementStrategy {
+  MONITOR // low power / low interest
+  KEEP_INFORMED // low power / high interest
+  KEEP_SATISFIED // high power / low interest
+  MANAGE_CLOSELY // high power / high interest
+}
+
+enum WorkPackageStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  DONE
+  BLOCKED
+}
+
+enum TaskStatus {
+  BACKLOG
+  IN_PROGRESS
+  REVIEW
+  DONE
+}
+
+enum RiskStatus {
+  OPEN
+  MITIGATED
+  OCCURRED
+  CLOSED
+}
+
+enum IssueStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum AssumptionStatus {
+  UNVALIDATED
+  VALIDATED
+  INVALIDATED
+}
+
+enum DependencyStatus {
+  PENDING
+  AT_RISK
+  RESOLVED
+}
+
+enum ChangeRequestStatus {
+  PROPOSED
+  APPROVED
+  REJECTED
+  DEFERRED
+  IMPLEMENTED
+}
+
+enum KnowledgeArea {
+  INTEGRATION
+  SCOPE
+  SCHEDULE
+  COST
+  QUALITY
+  RESOURCE
+  COMMUNICATION
+  RISK
+  PROCUREMENT
+  STAKEHOLDER
+}
+
+// ---------------------------------------------------------------------------
+// Core project
+// ---------------------------------------------------------------------------
+
+model Project {
+  id          String        @id @default(cuid())
+  name        String
+  description String?
+  framework   Framework
+  status      ProjectStatus @default(PLANNING)
+  ragStatus   RagStatus     @default(GREEN)
+  startDate   DateTime
+  endDate     DateTime?
+  sponsor     String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  // Initiating
+  charter      ProjectCharter?
+  stakeholders Stakeholder[]
+
+  // Planning
+  workPackages WorkPackage[]
+  risks        Risk[]
+
+  // Executing
+  tasks     Task[]
+  decisions Decision[]
+
+  // Monitoring & Controlling
+  statusReports  StatusReport[]
+  issues         Issue[]
+  assumptions    Assumption[]
+  dependencies   Dependency[]
+  changeRequests ChangeRequest[]
+  milestones     Milestone[]
+
+  // Closing
+  lessonsLearned   LessonLearned[]
+  closureChecklist ClosureChecklistItem[]
+
+  // Framework-specific extensions
+  businessCase BusinessCase?
+  tolerance    Prince2Tolerance?
+  stageGates   StageGate[]
+  backlogItems BacklogItem[]
+  sprints      Sprint[]
+
+  @@map("projects")
+}
+
+// ---------------------------------------------------------------------------
+// Initiating
+// ---------------------------------------------------------------------------
+
+model ProjectCharter {
+  id              String   @id @default(cuid())
+  projectId       String   @unique
+  project         Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  businessCase    String
+  objectives      String
+  successCriteria String
+  highLevelScope  String
+  budgetEstimate  Float
+  sponsor         String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("project_charters")
+}
+
+model Stakeholder {
+  id                 String             @id @default(cuid())
+  projectId          String
+  project            Project            @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  name               String
+  role               String
+  influence          StakeholderLevel
+  interest           StakeholderLevel
+  engagementStrategy EngagementStrategy
+  notes              String?
+  createdAt          DateTime           @default(now())
+
+  @@map("stakeholders")
+}
+
+// ---------------------------------------------------------------------------
+// Planning
+// ---------------------------------------------------------------------------
+
+model WorkPackage {
+  id             String            @id @default(cuid())
+  projectId      String
+  project        Project           @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  parentId       String?
+  parent         WorkPackage?      @relation("WorkPackageTree", fields: [parentId], references: [id], onDelete: Cascade)
+  children       WorkPackage[]     @relation("WorkPackageTree")
+  name           String
+  description    String?
+  level          Int               @default(1) // 1-4
+  order          Int               @default(0)
+  owner          String?
+  effortEstimate Float? // person-days
+  plannedCost    Float             @default(0)
+  actualCost     Float             @default(0)
+  startDate      DateTime?
+  endDate        DateTime?
+  status         WorkPackageStatus @default(NOT_STARTED)
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  tasks         Task[]
+  milestones    Milestone[]
+  predecessorOf WorkPackageDependency[] @relation("Predecessor")
+  successorOf   WorkPackageDependency[] @relation("Successor")
+
+  @@map("work_packages")
+}
+
+model WorkPackageDependency {
+  id            String      @id @default(cuid())
+  predecessorId String
+  predecessor   WorkPackage @relation("Predecessor", fields: [predecessorId], references: [id], onDelete: Cascade)
+  successorId   String
+  successor     WorkPackage @relation("Successor", fields: [successorId], references: [id], onDelete: Cascade)
+
+  @@unique([predecessorId, successorId])
+  @@map("work_package_dependencies")
+}
+
+model Risk {
+  id              String     @id @default(cuid())
+  projectId       String
+  project         Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  description     String
+  probability     Int // 1-5
+  impact          Int // 1-5
+  status          RiskStatus @default(OPEN)
+  mitigationPlan  String?
+  contingencyPlan String?
+  owner           String?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  @@map("risks")
+}
+
+// ---------------------------------------------------------------------------
+// Executing
+// ---------------------------------------------------------------------------
+
+model Task {
+  id            String       @id @default(cuid())
+  projectId     String
+  project       Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  workPackageId String?
+  workPackage   WorkPackage? @relation(fields: [workPackageId], references: [id], onDelete: SetNull)
+  title         String
+  description   String?
+  status        TaskStatus   @default(BACKLOG)
+  assignee      String?
+  priority      Priority     @default(MEDIUM)
+  dueDate       DateTime?
+  order         Int          @default(0)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  @@map("tasks")
+}
+
+model Decision {
+  id           String       @id @default(cuid())
+  projectId    String
+  project      Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  meetingDate  DateTime
+  attendees    String[]
+  notes        String
+  decisionText String
+  actionItems  ActionItem[]
+  createdAt    DateTime     @default(now())
+
+  @@map("decisions")
+}
+
+model ActionItem {
+  id          String    @id @default(cuid())
+  decisionId  String
+  decision    Decision  @relation(fields: [decisionId], references: [id], onDelete: Cascade)
+  description String
+  owner       String
+  dueDate     DateTime?
+  done        Boolean   @default(false)
+
+  @@map("action_items")
+}
+
+// ---------------------------------------------------------------------------
+// Monitoring & Controlling
+// ---------------------------------------------------------------------------
+
+model StatusReport {
+  id            String    @id @default(cuid())
+  projectId     String
+  project       Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  weekOf        DateTime
+  ragStatus     RagStatus
+  summary       String
+  budgetBurnPct Float
+  createdAt     DateTime  @default(now())
+
+  @@map("status_reports")
+}
+
+model Issue {
+  id           String      @id @default(cuid())
+  projectId    String
+  project      Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  description  String
+  impact       String?
+  status       IssueStatus @default(OPEN)
+  owner        String?
+  raisedDate   DateTime    @default(now())
+  resolvedDate DateTime?
+
+  @@map("issues")
+}
+
+model Assumption {
+  id          String           @id @default(cuid())
+  projectId   String
+  project     Project          @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  description String
+  status      AssumptionStatus @default(UNVALIDATED)
+  owner       String?
+  createdAt   DateTime         @default(now())
+
+  @@map("assumptions")
+}
+
+model Dependency {
+  id          String           @id @default(cuid())
+  projectId   String
+  project     Project          @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  description String
+  dependsOn   String // external party / team / project
+  status      DependencyStatus @default(PENDING)
+  owner       String?
+  createdAt   DateTime         @default(now())
+
+  @@map("dependencies")
+}
+
+model ChangeRequest {
+  id           String              @id @default(cuid())
+  projectId    String
+  project      Project             @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  description  String
+  impactScope  String?
+  impactTime   String?
+  impactCost   String?
+  status       ChangeRequestStatus @default(PROPOSED)
+  requestedBy  String?
+  decisionDate DateTime?
+  createdAt    DateTime            @default(now())
+
+  @@map("change_requests")
+}
+
+model Milestone {
+  id            String       @id @default(cuid())
+  projectId     String
+  project       Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  workPackageId String?
+  workPackage   WorkPackage? @relation(fields: [workPackageId], references: [id], onDelete: SetNull)
+  name          String
+  dueDate       DateTime
+  achieved      Boolean      @default(false)
+
+  @@map("milestones")
+}
+
+// ---------------------------------------------------------------------------
+// Closing
+// ---------------------------------------------------------------------------
+
+model LessonLearned {
+  id              String        @id @default(cuid())
+  projectId       String
+  project         Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  whatWentWell    String?
+  whatDidnt       String?
+  recommendations String?
+  knowledgeArea   KnowledgeArea
+  createdAt       DateTime      @default(now())
+
+  @@map("lessons_learned")
+}
+
+model ClosureChecklistItem {
+  id        String  @id @default(cuid())
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  label     String
+  category  String
+  done      Boolean @default(false)
+  order     Int     @default(0)
+
+  @@map("closure_checklist_items")
+}
+
+// ---------------------------------------------------------------------------
+// PRINCE2 extensions
+// ---------------------------------------------------------------------------
+
+model BusinessCase {
+  id                  String   @id @default(cuid())
+  projectId           String   @unique
+  project             Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  reasons             String
+  options             String
+  expectedBenefits    String
+  expectedDisBenefits String?
+  costsSummary        String
+  majorRisks          String?
+  updatedAt           DateTime @updatedAt
+
+  @@map("business_cases")
+}
+
+model Prince2Tolerance {
+  id        String  @id @default(cuid())
+  projectId String  @unique
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  time      String?
+  cost      String?
+  scope     String?
+  risk      String?
+  quality   String?
+  benefits  String?
+
+  @@map("prince2_tolerances")
+}
+
+model StageGate {
+  id        String   @id @default(cuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  name      String
+  endDate   DateTime
+  checklist Json // [{ label: string, done: boolean }]
+  approved  Boolean  @default(false)
+  order     Int      @default(0)
+
+  @@map("stage_gates")
+}
+
+// ---------------------------------------------------------------------------
+// Scrum extensions
+// ---------------------------------------------------------------------------
+
+model BacklogItem {
+  id          String     @id @default(cuid())
+  projectId   String
+  project     Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  sprintId    String?
+  sprint      Sprint?    @relation(fields: [sprintId], references: [id], onDelete: SetNull)
+  title       String
+  description String?
+  storyPoints Int?
+  priority    Priority   @default(MEDIUM)
+  status      TaskStatus @default(BACKLOG)
+  order       Int        @default(0)
+  createdAt   DateTime   @default(now())
+
+  @@map("backlog_items")
+}
+
+model Sprint {
+  id        String        @id @default(cuid())
+  projectId String
+  project   Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  name      String
+  goal      String?
+  startDate DateTime
+  endDate   DateTime
+  items     BacklogItem[]
+
+  @@map("sprints")
+}

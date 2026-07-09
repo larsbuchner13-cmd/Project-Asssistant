@@ -1,0 +1,172 @@
+{
+  "app": {
+    "name": "PM Copilot",
+    "tagline": "Project Management Assistant"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "initiating": "Initiating",
+    "planning": "Planning",
+    "executing": "Executing",
+    "monitoring": "Monitoring & Controlling",
+    "closing": "Closing",
+    "charter": "Project Charter",
+    "stakeholders": "Stakeholder Register",
+    "wbs": "Work Breakdown Structure",
+    "schedule": "Schedule",
+    "risks": "Risk Register",
+    "budget": "Budget Tracker",
+    "taskboard": "Task Board",
+    "decisions": "Meeting Notes",
+    "statusReport": "Status Report",
+    "raid": "RAID Log",
+    "changeRequests": "Change Requests",
+    "lessonsLearned": "Lessons Learned",
+    "closureChecklist": "Closure Checklist",
+    "backToDashboard": "Back to Dashboard"
+  },
+  "dashboard": {
+    "title": "Projects",
+    "subtitle": "All projects at a glance",
+    "newProject": "New Project",
+    "nextMilestone": "Next Milestone",
+    "noMilestone": "No milestone scheduled",
+    "openHighRisks": "Open High Risks",
+    "framework": "Framework",
+    "status": "Status",
+    "openProject": "Open Project"
+  },
+  "framework": {
+    "PMBOK": "PMBOK (predictive)",
+    "PRINCE2": "PRINCE2",
+    "SCRUM": "Scrum (agile)"
+  },
+  "projectStatus": {
+    "PLANNING": "Planning",
+    "ACTIVE": "Active",
+    "ON_HOLD": "On Hold",
+    "COMPLETED": "Completed",
+    "CANCELLED": "Cancelled"
+  },
+  "rag": {
+    "RED": "Red",
+    "AMBER": "Amber",
+    "GREEN": "Green"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "create": "Create",
+    "close": "Close",
+    "name": "Name",
+    "description": "Description",
+    "owner": "Owner",
+    "status": "Status",
+    "actions": "Actions",
+    "loading": "Loading…",
+    "noData": "No data yet",
+    "required": "Required",
+    "back": "Back",
+    "date": "Date",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "saved": "Saved"
+  },
+  "guide": {
+    "title": "Framework Guide"
+  },
+  "charter": {
+    "title": "Project Charter",
+    "guideText": "PMBOK: Develop Project Charter (Initiating process group). The charter formally authorizes the project and gives the project manager authority to apply resources.",
+    "businessCase": "Business Case",
+    "businessCaseHelp": "Why is this project being undertaken?",
+    "objectives": "Objectives",
+    "objectivesHelp": "What should the project achieve?",
+    "successCriteria": "Success Criteria",
+    "successCriteriaHelp": "How will success be measured?",
+    "highLevelScope": "High-Level Scope",
+    "budgetEstimate": "Budget Estimate",
+    "sponsor": "Sponsor",
+    "generate": "Generate Charter",
+    "documentTitle": "Project Charter Document",
+    "preview": "Preview",
+    "print": "Print / Save as PDF"
+  },
+  "stakeholders": {
+    "title": "Stakeholder Register",
+    "guideText": "PMBOK: Identify Stakeholders & Plan Stakeholder Engagement. PRINCE2: Communication Management Strategy. The power-interest matrix helps derive an engagement strategy per stakeholder.",
+    "addStakeholder": "Add Stakeholder",
+    "role": "Role",
+    "influence": "Influence",
+    "interest": "Interest",
+    "engagementStrategy": "Engagement Strategy",
+    "notes": "Notes",
+    "matrix": "Power-Interest Matrix",
+    "level": {
+      "LOW": "Low",
+      "MEDIUM": "Medium",
+      "HIGH": "High"
+    },
+    "strategy": {
+      "MONITOR": "Monitor",
+      "KEEP_INFORMED": "Keep Informed",
+      "KEEP_SATISFIED": "Keep Satisfied",
+      "MANAGE_CLOSELY": "Manage Closely"
+    }
+  },
+  "wbs": {
+    "title": "Work Breakdown Structure",
+    "guideText": "PMBOK: Define Scope & Create WBS (Planning process group). The WBS decomposes project scope into manageable work packages — up to 4 levels here. Drag items to rearrange the hierarchy.",
+    "addWorkPackage": "Add Work Package",
+    "addChild": "Add Child",
+    "effortEstimate": "Effort Estimate (days)",
+    "dependencies": "Dependencies",
+    "noDependencies": "No dependencies",
+    "level": "Level",
+    "plannedCost": "Planned Cost",
+    "actualCost": "Actual Cost"
+  },
+  "schedule": {
+    "title": "Schedule",
+    "guideText": "PMBOK: Sequence Activities & Develop Schedule. Bars show each work package's start/end date; arrows represent finish-to-start dependencies.",
+    "noDates": "No start/end date set",
+    "today": "Today"
+  },
+  "risks": {
+    "title": "Risk Register",
+    "guideText": "PMBOK: Identify Risks, Perform Qualitative/Quantitative Risk Analysis (Planning process group). Risk score = probability × impact. PRINCE2: Risk Management Strategy.",
+    "addRisk": "Add Risk",
+    "probability": "Probability",
+    "impact": "Impact",
+    "score": "Risk Score",
+    "mitigationPlan": "Mitigation Plan",
+    "contingencyPlan": "Contingency Plan",
+    "riskStatus": {
+      "OPEN": "Open",
+      "MITIGATED": "Mitigated",
+      "OCCURRED": "Occurred",
+      "CLOSED": "Closed"
+    }
+  },
+  "budget": {
+    "title": "Budget Tracker",
+    "guideText": "PMBOK: Estimate Costs & Determine Budget (Planning process group). Compare planned vs. actual cost per work package to spot cost variance early.",
+    "addBudgetLine": "Add Budget Line",
+    "label": "Label",
+    "plannedCost": "Planned Cost",
+    "actualCost": "Actual Cost",
+    "variance": "Variance",
+    "totalPlanned": "Total Planned",
+    "totalActual": "Total Actual"
+  },
+  "validation": {
+    "required": "This field is required",
+    "minLength": "Too short",
+    "number": "Must be a number",
+    "min": "Value too low",
+    "max": "Value too high"
+  }
+}

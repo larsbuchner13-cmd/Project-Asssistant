@@ -1,0 +1,172 @@
+{
+  "app": {
+    "name": "PM Copilot",
+    "tagline": "Projektmanagement-Assistent"
+  },
+  "nav": {
+    "dashboard": "Übersicht",
+    "initiating": "Initiierung",
+    "planning": "Planung",
+    "executing": "Durchführung",
+    "monitoring": "Überwachung & Steuerung",
+    "closing": "Abschluss",
+    "charter": "Projektauftrag",
+    "stakeholders": "Stakeholder-Register",
+    "wbs": "Projektstrukturplan",
+    "schedule": "Terminplan",
+    "risks": "Risikoregister",
+    "budget": "Budgetverfolgung",
+    "taskboard": "Aufgabenboard",
+    "decisions": "Besprechungsnotizen",
+    "statusReport": "Statusbericht",
+    "raid": "RAID-Log",
+    "changeRequests": "Änderungsanträge",
+    "lessonsLearned": "Lessons Learned",
+    "closureChecklist": "Abschluss-Checkliste",
+    "backToDashboard": "Zurück zur Übersicht"
+  },
+  "dashboard": {
+    "title": "Projekte",
+    "subtitle": "Alle Projekte im Überblick",
+    "newProject": "Neues Projekt",
+    "nextMilestone": "Nächster Meilenstein",
+    "noMilestone": "Kein Meilenstein geplant",
+    "openHighRisks": "Offene hohe Risiken",
+    "framework": "Framework",
+    "status": "Status",
+    "openProject": "Projekt öffnen"
+  },
+  "framework": {
+    "PMBOK": "PMBOK (prädiktiv)",
+    "PRINCE2": "PRINCE2",
+    "SCRUM": "Scrum (agil)"
+  },
+  "projectStatus": {
+    "PLANNING": "In Planung",
+    "ACTIVE": "Aktiv",
+    "ON_HOLD": "Pausiert",
+    "COMPLETED": "Abgeschlossen",
+    "CANCELLED": "Abgebrochen"
+  },
+  "rag": {
+    "RED": "Rot",
+    "AMBER": "Gelb",
+    "GREEN": "Grün"
+  },
+  "common": {
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "add": "Hinzufügen",
+    "create": "Erstellen",
+    "close": "Schließen",
+    "name": "Name",
+    "description": "Beschreibung",
+    "owner": "Verantwortlich",
+    "status": "Status",
+    "actions": "Aktionen",
+    "loading": "Wird geladen…",
+    "noData": "Keine Daten vorhanden",
+    "required": "Pflichtfeld",
+    "back": "Zurück",
+    "date": "Datum",
+    "startDate": "Startdatum",
+    "endDate": "Enddatum",
+    "saved": "Gespeichert"
+  },
+  "guide": {
+    "title": "Framework-Leitfaden"
+  },
+  "charter": {
+    "title": "Projektauftrag",
+    "guideText": "PMBOK: Entwickle den Projektauftrag (Prozessgruppe Initiierung). Der Projektauftrag autorisiert das Projekt formal und gibt dem Projektleiter die Befugnis, Ressourcen einzusetzen.",
+    "businessCase": "Geschäftsanliegen (Business Case)",
+    "businessCaseHelp": "Warum wird dieses Projekt durchgeführt?",
+    "objectives": "Ziele",
+    "objectivesHelp": "Was soll das Projekt erreichen?",
+    "successCriteria": "Erfolgskriterien",
+    "successCriteriaHelp": "Woran wird der Erfolg gemessen?",
+    "highLevelScope": "Grober Projektumfang",
+    "budgetEstimate": "Budgetschätzung",
+    "sponsor": "Sponsor",
+    "generate": "Projektauftrag erstellen",
+    "documentTitle": "Projektauftrag-Dokument",
+    "preview": "Vorschau",
+    "print": "Drucken / Als PDF speichern"
+  },
+  "stakeholders": {
+    "title": "Stakeholder-Register",
+    "guideText": "PMBOK: Stakeholder identifizieren & Stakeholder-Engagement planen. PRINCE2: Kommunikationsmanagementstrategie. Die Macht-Interesse-Matrix hilft, die Engagement-Strategie pro Stakeholder abzuleiten.",
+    "addStakeholder": "Stakeholder hinzufügen",
+    "role": "Rolle",
+    "influence": "Einfluss",
+    "interest": "Interesse",
+    "engagementStrategy": "Engagement-Strategie",
+    "notes": "Notizen",
+    "matrix": "Macht-Interesse-Matrix",
+    "level": {
+      "LOW": "Niedrig",
+      "MEDIUM": "Mittel",
+      "HIGH": "Hoch"
+    },
+    "strategy": {
+      "MONITOR": "Beobachten",
+      "KEEP_INFORMED": "Informiert halten",
+      "KEEP_SATISFIED": "Zufrieden stellen",
+      "MANAGE_CLOSELY": "Eng steuern"
+    }
+  },
+  "wbs": {
+    "title": "Projektstrukturplan (PSP)",
+    "guideText": "PMBOK: Scope definieren & WBS erstellen (Prozessgruppe Planung). Der PSP zerlegt den Projektumfang in überschaubare Arbeitspakete – hier bis zu 4 Ebenen. Ziehe Elemente per Drag & Drop, um die Hierarchie anzupassen.",
+    "addWorkPackage": "Arbeitspaket hinzufügen",
+    "addChild": "Unterelement hinzufügen",
+    "effortEstimate": "Aufwandsschätzung (PT)",
+    "dependencies": "Abhängigkeiten",
+    "noDependencies": "Keine Abhängigkeiten",
+    "level": "Ebene",
+    "plannedCost": "Geplante Kosten",
+    "actualCost": "Ist-Kosten"
+  },
+  "schedule": {
+    "title": "Terminplan",
+    "guideText": "PMBOK: Vorgänge planen & Terminplan entwickeln. Die Balken zeigen Start-/Enddatum je Arbeitspaket; Pfeile stellen Abhängigkeiten (Ende-Anfang) dar.",
+    "noDates": "Kein Start-/Enddatum gesetzt",
+    "today": "Heute"
+  },
+  "risks": {
+    "title": "Risikoregister",
+    "guideText": "PMBOK: Risiken identifizieren, qualitativ/quantitativ analysieren (Prozessgruppe Planung). Risikoscore = Wahrscheinlichkeit × Auswirkung. PRINCE2: Risikomanagementstrategie.",
+    "addRisk": "Risiko hinzufügen",
+    "probability": "Wahrscheinlichkeit",
+    "impact": "Auswirkung",
+    "score": "Risikoscore",
+    "mitigationPlan": "Vermeidungsmaßnahme",
+    "contingencyPlan": "Notfallplan",
+    "riskStatus": {
+      "OPEN": "Offen",
+      "MITIGATED": "Entschärft",
+      "OCCURRED": "Eingetreten",
+      "CLOSED": "Geschlossen"
+    }
+  },
+  "budget": {
+    "title": "Budgetverfolgung",
+    "guideText": "PMBOK: Kosten schätzen & Budget festlegen (Prozessgruppe Planung). Vergleiche geplante mit tatsächlichen Kosten je Arbeitspaket, um Kostenabweichungen frühzeitig zu erkennen.",
+    "addBudgetLine": "Budgetposition hinzufügen",
+    "label": "Bezeichnung",
+    "plannedCost": "Geplante Kosten",
+    "actualCost": "Ist-Kosten",
+    "variance": "Abweichung",
+    "totalPlanned": "Gesamt geplant",
+    "totalActual": "Gesamt Ist"
+  },
+  "validation": {
+    "required": "Dieses Feld ist erforderlich",
+    "minLength": "Zu kurz",
+    "number": "Muss eine Zahl sein",
+    "min": "Wert zu niedrig",
+    "max": "Wert zu hoch"
+  }
+}

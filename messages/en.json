@@ -168,5 +168,141 @@
     "number": "Must be a number",
     "min": "Value too low",
     "max": "Value too high"
+  },
+  "priority": {
+    "LOW": "Low",
+    "MEDIUM": "Medium",
+    "HIGH": "High",
+    "CRITICAL": "Critical"
+  },
+  "taskboard": {
+    "title": "Task Board",
+    "guideText": "PMBOK: Direct and Manage Project Work (Executing process group). The Kanban board links tasks to the work packages from the WBS.",
+    "addTask": "Add Task",
+    "workPackage": "Work Package",
+    "assignee": "Assignee",
+    "dueDate": "Due Date",
+    "priority": "Priority",
+    "column": {
+      "BACKLOG": "Backlog",
+      "IN_PROGRESS": "In Progress",
+      "REVIEW": "Review",
+      "DONE": "Done"
+    }
+  },
+  "decisions": {
+    "title": "Meeting Notes & Decisions",
+    "guideText": "PMBOK: Manage Communications (Executing process group). Capture meeting decisions and action items with owners and due dates.",
+    "addDecision": "Add Entry",
+    "attendees": "Attendees",
+    "attendeesPlaceholder": "Names, comma-separated",
+    "decisionText": "Decision",
+    "notes": "Notes",
+    "actionItems": "Action Items",
+    "actionDescription": "Description"
+  },
+  "statusReport": {
+    "title": "Status Report",
+    "guideText": "PMBOK: Monitor and Control Project Work (Monitoring & Controlling process group). One-click report with current RAG status, milestone progress, top risks, open issues, and budget burn.",
+    "generate": "Generate Status Report",
+    "milestoneProgress": "Milestone Progress",
+    "openIssues": "Open Issues",
+    "budgetBurn": "Budget Burn",
+    "topRisks": "Top Risks",
+    "history": "History"
+  },
+  "raid": {
+    "title": "RAID Log",
+    "guideText": "PMBOK/PRINCE2: Unified view of Risks, Assumptions, Issues, and Dependencies (Monitoring & Controlling process group).",
+    "all": "All",
+    "assumptions": "Assumptions",
+    "issues": "Issues",
+    "dependenciesTab": "Dependencies",
+    "addAssumption": "Add Assumption",
+    "addIssue": "Add Issue",
+    "addDependency": "Add Dependency",
+    "type": "Type",
+    "impact": "Impact",
+    "dependsOn": "Depends On",
+    "typeLabel": {
+      "RISK": "Risk",
+      "ASSUMPTION": "Assumption",
+      "ISSUE": "Issue",
+      "DEPENDENCY": "Dependency"
+    },
+    "assumptionStatus": {
+      "UNVALIDATED": "Unvalidated",
+      "VALIDATED": "Validated",
+      "INVALIDATED": "Invalidated"
+    },
+    "issueStatus": {
+      "OPEN": "Open",
+      "IN_PROGRESS": "In Progress",
+      "RESOLVED": "Resolved",
+      "CLOSED": "Closed"
+    },
+    "dependencyStatus": {
+      "PENDING": "Pending",
+      "AT_RISK": "At Risk",
+      "RESOLVED": "Resolved"
+    }
+  },
+  "changeRequests": {
+    "title": "Change Requests",
+    "guideText": "PMBOK: Perform Integrated Change Control (Monitoring & Controlling process group). Assess scope, time, and cost impact before approval.",
+    "addChangeRequest": "Add Change Request",
+    "impactScope": "Scope Impact",
+    "impactTime": "Time Impact",
+    "impactCost": "Cost Impact",
+    "requestedBy": "Requested By",
+    "decisionDate": "Decision Date",
+    "crStatus": {
+      "PROPOSED": "Proposed",
+      "APPROVED": "Approved",
+      "REJECTED": "Rejected",
+      "DEFERRED": "Deferred",
+      "IMPLEMENTED": "Implemented"
+    }
+  },
+  "lessonsLearned": {
+    "title": "Lessons Learned",
+    "guideText": "PMBOK: Manage Project Knowledge (Closing process group). Capture insights per knowledge area for future projects.",
+    "addLesson": "Add Entry",
+    "knowledgeArea": "Knowledge Area",
+    "whatWentWell": "What Went Well",
+    "whatDidnt": "What Didn't Go Well",
+    "recommendations": "Recommendations"
+  },
+  "knowledgeArea": {
+    "INTEGRATION": "Integration",
+    "SCOPE": "Scope",
+    "SCHEDULE": "Schedule",
+    "COST": "Cost",
+    "QUALITY": "Quality",
+    "RESOURCE": "Resource",
+    "COMMUNICATION": "Communication",
+    "RISK": "Risk",
+    "PROCUREMENT": "Procurement",
+    "STAKEHOLDER": "Stakeholder"
+  },
+  "closureChecklist": {
+    "title": "Project Closure Checklist",
+    "guideText": "PMBOK: Close Project or Phase (Closing process group). Confirm deliverables are accepted, documentation archived, resources released, and sponsor sign-off obtained.",
+    "addItem": "Add Item",
+    "categoryLabel": "Category",
+    "completed": "completed",
+    "category": {
+      "deliverables": "Deliverables",
+      "documentation": "Documentation",
+      "resources": "Resources",
+      "signoff": "Sign-off",
+      "other": "Other"
+    },
+    "defaults": {
+      "deliverablesAccepted": "All deliverables have been accepted",
+      "documentationArchived": "Project documentation is archived",
+      "resourcesReleased": "Resources have been released",
+      "sponsorSignoff": "Sponsor sign-off obtained"
+    }
   }
 }

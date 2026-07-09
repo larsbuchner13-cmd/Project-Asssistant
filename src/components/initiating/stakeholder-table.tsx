@@ -24,36 +24,38 @@ export function StakeholderTable({
   }
 
   return (
-    <Table>
+    <Table className="min-w-[700px]">
       <TableHeader>
         <TableRow>
           <TableHead>{t("common.name")}</TableHead>
-          <TableHead>{t("stakeholders.role")}</TableHead>
-          <TableHead>{t("stakeholders.influence")}</TableHead>
-          <TableHead>{t("stakeholders.interest")}</TableHead>
-          <TableHead>{t("stakeholders.engagementStrategy")}</TableHead>
-          <TableHead className="text-right">{t("common.actions")}</TableHead>
+          <TableHead className="whitespace-nowrap">{t("stakeholders.role")}</TableHead>
+          <TableHead className="whitespace-nowrap">{t("stakeholders.influence")}</TableHead>
+          <TableHead className="whitespace-nowrap">{t("stakeholders.interest")}</TableHead>
+          <TableHead className="whitespace-nowrap">{t("stakeholders.engagementStrategy")}</TableHead>
+          <TableHead className="whitespace-nowrap text-right">{t("common.actions")}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {stakeholders.map((s) => (
           <TableRow key={s.id}>
             <TableCell className="font-medium">{s.name}</TableCell>
-            <TableCell>{s.role}</TableCell>
-            <TableCell>
+            <TableCell className="whitespace-nowrap">{s.role}</TableCell>
+            <TableCell className="whitespace-nowrap">
               <Badge variant="outline">{t(`stakeholders.level.${s.influence}`)}</Badge>
             </TableCell>
-            <TableCell>
+            <TableCell className="whitespace-nowrap">
               <Badge variant="outline">{t(`stakeholders.level.${s.interest}`)}</Badge>
             </TableCell>
-            <TableCell>{t(`stakeholders.strategy.${s.engagementStrategy}`)}</TableCell>
-            <TableCell className="flex justify-end gap-1">
-              <StakeholderFormDialog projectId={projectId} stakeholder={s} />
-              <form action={deleteStakeholder.bind(null, projectId, s.id)}>
-                <Button variant="ghost" size="icon" type="submit">
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </form>
+            <TableCell className="whitespace-nowrap">{t(`stakeholders.strategy.${s.engagementStrategy}`)}</TableCell>
+            <TableCell className="whitespace-nowrap">
+              <div className="flex justify-end gap-1">
+                <StakeholderFormDialog projectId={projectId} stakeholder={s} />
+                <form action={deleteStakeholder.bind(null, projectId, s.id)}>
+                  <Button variant="ghost" size="icon" type="submit">
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </form>
+              </div>
             </TableCell>
           </TableRow>
         ))}

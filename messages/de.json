@@ -168,5 +168,141 @@
     "number": "Muss eine Zahl sein",
     "min": "Wert zu niedrig",
     "max": "Wert zu hoch"
+  },
+  "priority": {
+    "LOW": "Niedrig",
+    "MEDIUM": "Mittel",
+    "HIGH": "Hoch",
+    "CRITICAL": "Kritisch"
+  },
+  "taskboard": {
+    "title": "Aufgabenboard",
+    "guideText": "PMBOK: Ressourcen & Vorgänge steuern (Prozessgruppe Durchführung). Das Kanban-Board verknüpft Aufgaben mit den Arbeitspaketen aus dem PSP.",
+    "addTask": "Aufgabe hinzufügen",
+    "workPackage": "Arbeitspaket",
+    "assignee": "Zugewiesen an",
+    "dueDate": "Fällig am",
+    "priority": "Priorität",
+    "column": {
+      "BACKLOG": "Backlog",
+      "IN_PROGRESS": "In Bearbeitung",
+      "REVIEW": "Review",
+      "DONE": "Erledigt"
+    }
+  },
+  "decisions": {
+    "title": "Besprechungsnotizen & Entscheidungen",
+    "guideText": "PMBOK: Kommunikation managen (Prozessgruppe Durchführung). Halte Besprechungsentscheidungen und Maßnahmen mit Verantwortlichen und Fälligkeitsdatum fest.",
+    "addDecision": "Eintrag hinzufügen",
+    "attendees": "Teilnehmer",
+    "attendeesPlaceholder": "Namen, mit Komma getrennt",
+    "decisionText": "Entscheidung",
+    "notes": "Notizen",
+    "actionItems": "Maßnahmen",
+    "actionDescription": "Beschreibung"
+  },
+  "statusReport": {
+    "title": "Statusbericht",
+    "guideText": "PMBOK: Projektarbeit überwachen & steuern (Prozessgruppe Überwachung & Steuerung). Ein-Klick-Bericht mit aktuellem RAG-Status, Meilensteinfortschritt, Top-Risiken, offenen Issues und Budget-Burn.",
+    "generate": "Statusbericht generieren",
+    "milestoneProgress": "Meilenstein-Fortschritt",
+    "openIssues": "Offene Issues",
+    "budgetBurn": "Budget-Burn",
+    "topRisks": "Top-Risiken",
+    "history": "Historie"
+  },
+  "raid": {
+    "title": "RAID-Log",
+    "guideText": "PMBOK/PRINCE2: Einheitliche Sicht auf Risiken, Annahmen, Issues und Abhängigkeiten (Prozessgruppe Überwachung & Steuerung).",
+    "all": "Alle",
+    "assumptions": "Annahmen",
+    "issues": "Issues",
+    "dependenciesTab": "Abhängigkeiten",
+    "addAssumption": "Annahme hinzufügen",
+    "addIssue": "Issue hinzufügen",
+    "addDependency": "Abhängigkeit hinzufügen",
+    "type": "Typ",
+    "impact": "Auswirkung",
+    "dependsOn": "Abhängig von",
+    "typeLabel": {
+      "RISK": "Risiko",
+      "ASSUMPTION": "Annahme",
+      "ISSUE": "Issue",
+      "DEPENDENCY": "Abhängigkeit"
+    },
+    "assumptionStatus": {
+      "UNVALIDATED": "Ungeprüft",
+      "VALIDATED": "Bestätigt",
+      "INVALIDATED": "Widerlegt"
+    },
+    "issueStatus": {
+      "OPEN": "Offen",
+      "IN_PROGRESS": "In Bearbeitung",
+      "RESOLVED": "Gelöst",
+      "CLOSED": "Geschlossen"
+    },
+    "dependencyStatus": {
+      "PENDING": "Ausstehend",
+      "AT_RISK": "Gefährdet",
+      "RESOLVED": "Erledigt"
+    }
+  },
+  "changeRequests": {
+    "title": "Änderungsanträge",
+    "guideText": "PMBOK: Integrierte Änderungssteuerung (Prozessgruppe Überwachung & Steuerung). Bewerte Auswirkungen auf Umfang, Zeit und Kosten vor der Freigabe.",
+    "addChangeRequest": "Änderungsantrag hinzufügen",
+    "impactScope": "Auswirkung Umfang",
+    "impactTime": "Auswirkung Zeit",
+    "impactCost": "Auswirkung Kosten",
+    "requestedBy": "Beantragt von",
+    "decisionDate": "Entscheidungsdatum",
+    "crStatus": {
+      "PROPOSED": "Vorgeschlagen",
+      "APPROVED": "Genehmigt",
+      "REJECTED": "Abgelehnt",
+      "DEFERRED": "Zurückgestellt",
+      "IMPLEMENTED": "Umgesetzt"
+    }
+  },
+  "lessonsLearned": {
+    "title": "Lessons Learned",
+    "guideText": "PMBOK: Wissen managen (Prozessgruppe Abschluss). Erfasse Erkenntnisse je Wissensgebiet für zukünftige Projekte.",
+    "addLesson": "Eintrag hinzufügen",
+    "knowledgeArea": "Wissensgebiet",
+    "whatWentWell": "Was lief gut",
+    "whatDidnt": "Was lief nicht gut",
+    "recommendations": "Empfehlungen"
+  },
+  "knowledgeArea": {
+    "INTEGRATION": "Integration",
+    "SCOPE": "Umfang",
+    "SCHEDULE": "Termine",
+    "COST": "Kosten",
+    "QUALITY": "Qualität",
+    "RESOURCE": "Ressourcen",
+    "COMMUNICATION": "Kommunikation",
+    "RISK": "Risiko",
+    "PROCUREMENT": "Beschaffung",
+    "STAKEHOLDER": "Stakeholder"
+  },
+  "closureChecklist": {
+    "title": "Abschluss-Checkliste",
+    "guideText": "PMBOK: Projekt oder Phase abschließen (Prozessgruppe Abschluss). Stelle sicher, dass Lieferobjekte abgenommen, Dokumentation archiviert, Ressourcen freigegeben und die Sponsor-Freigabe erteilt wurde.",
+    "addItem": "Punkt hinzufügen",
+    "categoryLabel": "Kategorie",
+    "completed": "erledigt",
+    "category": {
+      "deliverables": "Lieferobjekte",
+      "documentation": "Dokumentation",
+      "resources": "Ressourcen",
+      "signoff": "Freigabe",
+      "other": "Sonstiges"
+    },
+    "defaults": {
+      "deliverablesAccepted": "Alle Lieferobjekte wurden abgenommen",
+      "documentationArchived": "Projektdokumentation ist archiviert",
+      "resourcesReleased": "Ressourcen wurden freigegeben",
+      "sponsorSignoff": "Sponsor-Freigabe liegt vor"
+    }
   }
 }

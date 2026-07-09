@@ -29,23 +29,23 @@ export const projectNavGroups: NavGroup[] = [
   {
     key: "executing",
     items: [
-      { key: "taskboard", href: (id) => `/projects/${id}/executing/taskboard`, available: false },
-      { key: "decisions", href: (id) => `/projects/${id}/executing/decisions`, available: false },
+      { key: "taskboard", href: (id) => `/projects/${id}/executing/taskboard`, available: true },
+      { key: "decisions", href: (id) => `/projects/${id}/executing/decisions`, available: true },
     ],
   },
   {
     key: "monitoring",
     items: [
-      { key: "statusReport", href: (id) => `/projects/${id}/monitoring/status-report`, available: false },
-      { key: "raid", href: (id) => `/projects/${id}/monitoring/raid`, available: false },
-      { key: "changeRequests", href: (id) => `/projects/${id}/monitoring/change-requests`, available: false },
+      { key: "statusReport", href: (id) => `/projects/${id}/monitoring/status-report`, available: true },
+      { key: "raid", href: (id) => `/projects/${id}/monitoring/raid`, available: true },
+      { key: "changeRequests", href: (id) => `/projects/${id}/monitoring/change-requests`, available: true },
     ],
   },
   {
     key: "closing",
     items: [
-      { key: "lessonsLearned", href: (id) => `/projects/${id}/closing/lessons-learned`, available: false },
-      { key: "closureChecklist", href: (id) => `/projects/${id}/closing/checklist`, available: false },
+      { key: "lessonsLearned", href: (id) => `/projects/${id}/closing/lessons-learned`, available: true },
+      { key: "closureChecklist", href: (id) => `/projects/${id}/closing/checklist`, available: true },
     ],
   },
 ];

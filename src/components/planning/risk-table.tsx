@@ -23,16 +23,16 @@ export function RiskTable({ projectId, risks }: { projectId: string; risks: Risk
   );
 
   return (
-    <Table>
+    <Table className="min-w-[700px]">
       <TableHeader>
         <TableRow>
           <TableHead>{t("common.description")}</TableHead>
-          <TableHead>{t("risks.probability")}</TableHead>
-          <TableHead>{t("risks.impact")}</TableHead>
-          <TableHead>{t("risks.score")}</TableHead>
-          <TableHead>{t("common.owner")}</TableHead>
-          <TableHead>{t("common.status")}</TableHead>
-          <TableHead className="text-right">{t("common.actions")}</TableHead>
+          <TableHead className="whitespace-nowrap">{t("risks.probability")}</TableHead>
+          <TableHead className="whitespace-nowrap">{t("risks.impact")}</TableHead>
+          <TableHead className="whitespace-nowrap">{t("risks.score")}</TableHead>
+          <TableHead className="whitespace-nowrap">{t("common.owner")}</TableHead>
+          <TableHead className="whitespace-nowrap">{t("common.status")}</TableHead>
+          <TableHead className="whitespace-nowrap text-right">{t("common.actions")}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -43,20 +43,22 @@ export function RiskTable({ projectId, risks }: { projectId: string; risks: Risk
               <TableCell className="max-w-xs truncate" title={r.description}>
                 {r.description}
               </TableCell>
-              <TableCell>{r.probability}</TableCell>
-              <TableCell>{r.impact}</TableCell>
-              <TableCell>
+              <TableCell className="whitespace-nowrap">{r.probability}</TableCell>
+              <TableCell className="whitespace-nowrap">{r.impact}</TableCell>
+              <TableCell className="whitespace-nowrap">
                 <Badge variant={riskScoreVariant(score) as never}>{score}</Badge>
               </TableCell>
-              <TableCell>{r.owner ?? "—"}</TableCell>
-              <TableCell>{t(`risks.riskStatus.${r.status}`)}</TableCell>
-              <TableCell className="flex justify-end gap-1">
-                <RiskFormDialog projectId={projectId} risk={r} />
-                <form action={deleteRisk.bind(null, projectId, r.id)}>
-                  <Button variant="ghost" size="icon" type="submit">
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </form>
+              <TableCell className="whitespace-nowrap">{r.owner ?? "—"}</TableCell>
+              <TableCell className="whitespace-nowrap">{t(`risks.riskStatus.${r.status}`)}</TableCell>
+              <TableCell className="whitespace-nowrap">
+                <div className="flex justify-end gap-1">
+                  <RiskFormDialog projectId={projectId} risk={r} />
+                  <form action={deleteRisk.bind(null, projectId, r.id)}>
+                    <Button variant="ghost" size="icon" type="submit">
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </form>
+                </div>
               </TableCell>
             </TableRow>
           );

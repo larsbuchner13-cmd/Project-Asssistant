@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { prisma } from "@/lib/prisma";
+import { AuthzError, requireProjectAccess } from "@/lib/authz";
 import { ProjectSidebar } from "@/components/layout/project-sidebar";
 
 export default async function ProjectLayout({
@@ -10,6 +11,13 @@ export default async function ProjectLayout({
   children: React.ReactNode;
   params: { projectId: string; locale: string };
 }) {
+  try {
+    await requireProjectAccess(projectId);
+  } catch (e) {
+    if (e instanceof AuthzError) notFound();
+    throw e;
+  }
+
   const project = await prisma.project.findUnique({
     where: { id: projectId },
     select: { id: true, name: true, framework: true },

@@ -172,6 +172,9 @@
   "validation": {
     "required": "Dieses Feld ist erforderlich",
     "minLength": "Zu kurz",
+    "minLength8": "Mindestens 8 Zeichen",
+    "email": "Ungültige E-Mail-Adresse",
+    "passwordMismatch": "Passwörter stimmen nicht überein",
     "number": "Muss eine Zahl sein",
     "min": "Wert zu niedrig",
     "max": "Wert zu hoch"
@@ -377,5 +380,44 @@
     "totalPoints": "Story Points gesamt",
     "noPoints": "Keine Story Points im Sprint",
     "notStarted": "Sprint hat noch nicht begonnen"
+  },
+  "auth": {
+    "signIn": "Anmelden",
+    "signInSubtitle": "Melde dich mit deinen Zugangsdaten an.",
+    "signOut": "Abmelden",
+    "createAccount": "Konto erstellen",
+    "registerSubtitle": "Registriere dich – ein Administrator muss dein Konto anschließend freischalten.",
+    "email": "E-Mail-Adresse",
+    "password": "Passwort",
+    "confirmPassword": "Passwort bestätigen",
+    "noAccount": "Noch kein Konto?",
+    "haveAccount": "Bereits ein Konto?",
+    "invalidCredentials": "E-Mail oder Passwort ist falsch.",
+    "emailTaken": "Diese E-Mail-Adresse ist bereits registriert.",
+    "registerFailed": "Registrierung fehlgeschlagen. Bitte versuche es erneut.",
+    "adminArea": "Benutzerverwaltung",
+    "pendingTitle": "Konto wartet auf Freischaltung",
+    "pendingSubtitle": "Dein Konto wurde erstellt und wartet auf die Freischaltung durch einen Administrator. Falls dir gerade eben Zugriff gewährt wurde, melde dich einmal ab und wieder an.",
+    "disabledTitle": "Konto deaktiviert",
+    "disabledSubtitle": "Dein Konto wurde von einem Administrator deaktiviert. Wende dich an deinen Administrator, falls du glaubst, dass dies ein Irrtum ist."
+  },
+  "admin": {
+    "title": "Benutzerverwaltung",
+    "subtitle": "Benutzer freischalten, Rollen vergeben und Konten verwalten.",
+    "role": "Rolle",
+    "roleUser": "Benutzer",
+    "roleAdmin": "Administrator",
+    "projects": "Projekte",
+    "registeredAt": "Registriert am",
+    "you": "du",
+    "approve": "Freischalten",
+    "disable": "Deaktivieren",
+    "actionFailed": "Aktion fehlgeschlagen. Bitte versuche es erneut.",
+    "cannotModifySelf": "Du kannst deine eigene Rolle oder deinen eigenen Status nicht ändern.",
+    "userStatus": {
+      "PENDING": "Wartet auf Freischaltung",
+      "ACTIVE": "Aktiv",
+      "DISABLED": "Deaktiviert"
+    }
   }
 }

@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 
 import { prisma } from "@/lib/prisma";
+import { requireProjectAccess } from "@/lib/authz";
 import { workPackageFormSchema, type WorkPackageFormValues } from "@/lib/validations/work-package";
 
 function toWorkPackageData(parsed: WorkPackageFormValues) {
@@ -34,6 +35,7 @@ export async function createWorkPackage(
   parentId: string | null,
   values: WorkPackageFormValues
 ) {
+  await requireProjectAccess(projectId);
   const parsed = workPackageFormSchema.parse(values);
 
   const parent = parentId ? await prisma.workPackage.findUnique({ where: { id: parentId } }) : null;
@@ -64,6 +66,7 @@ export async function updateWorkPackage(
   workPackageId: string,
   values: WorkPackageFormValues
 ) {
+  await requireProjectAccess(projectId);
   const parsed = workPackageFormSchema.parse(values);
 
   const workPackage = await prisma.workPackage.update({
@@ -80,6 +83,7 @@ export async function updateWorkPackage(
 }
 
 export async function deleteWorkPackage(projectId: string, workPackageId: string) {
+  await requireProjectAccess(projectId);
   await prisma.workPackage.delete({ where: { id: workPackageId } });
   revalidatePath(`/projects/${projectId}/planning/wbs`);
   revalidatePath(`/projects/${projectId}/planning/schedule`);
@@ -100,6 +104,7 @@ export async function moveWorkPackage(
   newParentId: string | null,
   orderedSiblingIds: string[]
 ) {
+  await requireProjectAccess(projectId);
   const parent = newParentId ? await prisma.workPackage.findUnique({ where: { id: newParentId } }) : null;
   const newLevel = parent ? parent.level + 1 : 1;
 

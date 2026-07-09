@@ -3,9 +3,12 @@ import { Inter } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { getServerSession } from "next-auth";
 
 import { locales } from "@/i18n/config";
+import { authOptions } from "@/lib/auth";
 import { ThemeProvider } from "@/components/theme-provider";
+import { AuthSessionProvider } from "@/components/auth-session-provider";
 import { Topbar } from "@/components/layout/topbar";
 import "./globals.css";
 
@@ -33,16 +36,19 @@ export default async function LocaleLayout({
   if (!locales.includes(locale as (typeof locales)[number])) notFound();
 
   const messages = await getMessages();
+  const session = await getServerSession(authOptions);
 
   return (
     <html lang={locale} suppressHydrationWarning>
       <body className={`${inter.variable} font-sans antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <NextIntlClientProvider messages={messages}>
-            <div className="flex min-h-screen flex-col">
-              <Topbar />
-              <div className="flex-1">{children}</div>
-            </div>
+            <AuthSessionProvider session={session}>
+              <div className="flex min-h-screen flex-col">
+                <Topbar />
+                <div className="flex-1">{children}</div>
+              </div>
+            </AuthSessionProvider>
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>

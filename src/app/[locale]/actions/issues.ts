@@ -3,9 +3,11 @@
 import { revalidatePath } from "next/cache";
 
 import { prisma } from "@/lib/prisma";
+import { requireProjectAccess } from "@/lib/authz";
 import { issueFormSchema, type IssueFormValues } from "@/lib/validations/issue";
 
 export async function createIssue(projectId: string, values: IssueFormValues) {
+  await requireProjectAccess(projectId);
   const parsed = issueFormSchema.parse(values);
   const issue = await prisma.issue.create({
     data: { projectId, description: parsed.description, impact: parsed.impact || null, status: parsed.status, owner: parsed.owner || null },
@@ -15,6 +17,7 @@ export async function createIssue(projectId: string, values: IssueFormValues) {
 }
 
 export async function updateIssue(projectId: string, id: string, values: IssueFormValues) {
+  await requireProjectAccess(projectId);
   const parsed = issueFormSchema.parse(values);
   const issue = await prisma.issue.update({
     where: { id },
@@ -31,6 +34,7 @@ export async function updateIssue(projectId: string, id: string, values: IssueFo
 }
 
 export async function deleteIssue(projectId: string, id: string) {
+  await requireProjectAccess(projectId);
   await prisma.issue.delete({ where: { id } });
   revalidatePath(`/projects/${projectId}/monitoring/raid`);
 }

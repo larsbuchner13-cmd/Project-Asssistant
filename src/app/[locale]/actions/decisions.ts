@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 
 import { prisma } from "@/lib/prisma";
+import { requireProjectAccess } from "@/lib/authz";
 import { decisionFormSchema, type DecisionFormValues } from "@/lib/validations/decision";
 
 function splitAttendees(attendees: string) {
@@ -13,6 +14,7 @@ function splitAttendees(attendees: string) {
 }
 
 export async function createDecision(projectId: string, values: DecisionFormValues) {
+  await requireProjectAccess(projectId);
   const parsed = decisionFormSchema.parse(values);
 
   const decision = await prisma.decision.create({
@@ -37,6 +39,7 @@ export async function createDecision(projectId: string, values: DecisionFormValu
 }
 
 export async function updateDecision(projectId: string, decisionId: string, values: DecisionFormValues) {
+  await requireProjectAccess(projectId);
   const parsed = decisionFormSchema.parse(values);
 
   await prisma.actionItem.deleteMany({ where: { decisionId } });
@@ -63,11 +66,13 @@ export async function updateDecision(projectId: string, decisionId: string, valu
 }
 
 export async function deleteDecision(projectId: string, decisionId: string) {
+  await requireProjectAccess(projectId);
   await prisma.decision.delete({ where: { id: decisionId } });
   revalidatePath(`/projects/${projectId}/executing/decisions`);
 }
 
 export async function toggleActionItem(projectId: string, actionItemId: string, done: boolean) {
+  await requireProjectAccess(projectId);
   await prisma.actionItem.update({ where: { id: actionItemId }, data: { done } });
   revalidatePath(`/projects/${projectId}/executing/decisions`);
 }

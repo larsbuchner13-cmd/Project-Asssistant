@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 
 import { prisma } from "@/lib/prisma";
+import { requireProjectAccess } from "@/lib/authz";
 import { stageGateFormSchema, type StageGateFormValues, type ChecklistItem } from "@/lib/validations/stage-gate";
 
 function revalidate(projectId: string) {
@@ -10,6 +11,7 @@ function revalidate(projectId: string) {
 }
 
 export async function createStageGate(projectId: string, values: StageGateFormValues) {
+  await requireProjectAccess(projectId);
   const parsed = stageGateFormSchema.parse(values);
   const count = await prisma.stageGate.count({ where: { projectId } });
   const gate = await prisma.stageGate.create({
@@ -26,6 +28,7 @@ export async function createStageGate(projectId: string, values: StageGateFormVa
 }
 
 export async function updateStageGate(projectId: string, id: string, values: StageGateFormValues) {
+  await requireProjectAccess(projectId);
   const parsed = stageGateFormSchema.parse(values);
   const gate = await prisma.stageGate.update({
     where: { id },
@@ -36,16 +39,19 @@ export async function updateStageGate(projectId: string, id: string, values: Sta
 }
 
 export async function deleteStageGate(projectId: string, id: string) {
+  await requireProjectAccess(projectId);
   await prisma.stageGate.delete({ where: { id } });
   revalidate(projectId);
 }
 
 export async function toggleStageGateApproved(projectId: string, id: string, approved: boolean) {
+  await requireProjectAccess(projectId);
   await prisma.stageGate.update({ where: { id }, data: { approved } });
   revalidate(projectId);
 }
 
 export async function addChecklistItem(projectId: string, id: string, label: string) {
+  await requireProjectAccess(projectId);
   const gate = await prisma.stageGate.findUniqueOrThrow({ where: { id } });
   const checklist = (gate.checklist as ChecklistItem[]) ?? [];
   checklist.push({ label, done: false });
@@ -54,6 +60,7 @@ export async function addChecklistItem(projectId: string, id: string, label: str
 }
 
 export async function toggleChecklistItem(projectId: string, id: string, index: number, done: boolean) {
+  await requireProjectAccess(projectId);
   const gate = await prisma.stageGate.findUniqueOrThrow({ where: { id } });
   const checklist = [...((gate.checklist as ChecklistItem[]) ?? [])];
   if (checklist[index]) checklist[index] = { ...checklist[index], done };
@@ -62,6 +69,7 @@ export async function toggleChecklistItem(projectId: string, id: string, index: 
 }
 
 export async function removeChecklistItem(projectId: string, id: string, index: number) {
+  await requireProjectAccess(projectId);
   const gate = await prisma.stageGate.findUniqueOrThrow({ where: { id } });
   const checklist = ((gate.checklist as ChecklistItem[]) ?? []).filter((_, i) => i !== index);
   await prisma.stageGate.update({ where: { id }, data: { checklist } });

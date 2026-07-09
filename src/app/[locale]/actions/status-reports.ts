@@ -4,9 +4,11 @@ import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 
 import { prisma } from "@/lib/prisma";
+import { requireProjectAccess } from "@/lib/authz";
 import { riskScore, riskScoreVariant } from "@/lib/pm";
 
 export async function computeBudgetBurnPct(projectId: string) {
+  await requireProjectAccess(projectId);
   const workPackages = await prisma.workPackage.findMany({ where: { projectId } });
   const planned = workPackages.reduce((sum, wp) => sum + wp.plannedCost, 0);
   const actual = workPackages.reduce((sum, wp) => sum + wp.actualCost, 0);
@@ -14,6 +16,7 @@ export async function computeBudgetBurnPct(projectId: string) {
 }
 
 export async function generateStatusReport(projectId: string, locale: string) {
+  await requireProjectAccess(projectId);
   const project = await prisma.project.findUniqueOrThrow({ where: { id: projectId } });
 
   const [risks, milestones, openIssues, t] = await Promise.all([
@@ -56,6 +59,7 @@ export async function generateStatusReport(projectId: string, locale: string) {
 }
 
 export async function deleteStatusReport(projectId: string, reportId: string) {
+  await requireProjectAccess(projectId);
   await prisma.statusReport.delete({ where: { id: reportId } });
   revalidatePath(`/projects/${projectId}/monitoring/status-report`);
 }

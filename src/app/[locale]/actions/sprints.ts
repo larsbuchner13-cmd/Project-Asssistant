@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 
 import { prisma } from "@/lib/prisma";
+import { requireProjectAccess } from "@/lib/authz";
 import { sprintFormSchema, type SprintFormValues } from "@/lib/validations/sprint";
 
 function revalidate(projectId: string) {
@@ -13,6 +14,7 @@ function revalidate(projectId: string) {
 }
 
 export async function createSprint(projectId: string, values: SprintFormValues) {
+  await requireProjectAccess(projectId);
   const parsed = sprintFormSchema.parse(values);
   const sprint = await prisma.sprint.create({
     data: {
@@ -28,6 +30,7 @@ export async function createSprint(projectId: string, values: SprintFormValues) 
 }
 
 export async function updateSprint(projectId: string, id: string, values: SprintFormValues) {
+  await requireProjectAccess(projectId);
   const parsed = sprintFormSchema.parse(values);
   const sprint = await prisma.sprint.update({
     where: { id },
@@ -43,6 +46,7 @@ export async function updateSprint(projectId: string, id: string, values: Sprint
 }
 
 export async function deleteSprint(projectId: string, id: string) {
+  await requireProjectAccess(projectId);
   await prisma.sprint.delete({ where: { id } });
   revalidate(projectId);
 }

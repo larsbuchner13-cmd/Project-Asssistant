@@ -20,6 +20,7 @@ Tolerance settings alongside the standard views.
 - next-intl (German default, English secondary)
 - react-hook-form + zod
 - @dnd-kit for drag-and-drop (WBS tree, Kanban boards)
+- NextAuth (Credentials) + bcryptjs for authentication and user management
 
 ## Setup
 
@@ -53,6 +54,10 @@ needs, so migrations against the pooled URL fail with a `P1002` timeout. If
 you're on a plain (non-Neon) Postgres instance without pooling, both
 variables can point at the same URL.
 
+Also set `NEXTAUTH_SECRET` (generate one with `openssl rand -base64 32`) and
+`NEXTAUTH_URL` (e.g. `http://localhost:3000` in dev) — both are used by
+NextAuth to sign session tokens and build redirect URLs.
+
 ### 3. Run migrations and seed data
 
 ```bash
@@ -61,7 +66,15 @@ npm run db:seed
 ```
 
 This creates the schema and seeds one demo project per framework (PMBOK,
-PRINCE2, Scrum).
+PRINCE2, Scrum), plus two demo accounts: `admin@pmcopilot.local` (role
+`ADMIN`, owns the PMBOK and PRINCE2 projects) and `member@pmcopilot.local`
+(role `USER`, owns the Scrum project). Both use the password `changeme123` —
+change it after first login in a real deployment.
+
+> The `ownerId` column on `projects` is required (`NOT NULL`), so this
+> migration assumes an empty database. If you already have projects in an
+> existing local database, run `npx prisma migrate reset` instead (it drops
+> and recreates the schema, then re-runs the seed).
 
 ### 4. Start the dev server
 
@@ -97,6 +110,26 @@ Open [http://localhost:3000](http://localhost:3000) — you'll be redirected to
 4. Optionally run `npm run db:seed` once against the production database if
    you want the demo projects there too.
 
+## User management
+
+Accounts are self-service but gated: anyone can register at `/register`,
+but new accounts start with status `PENDING` and can't sign in to any
+project pages until an admin approves them at `/admin/users` (visible only
+to `ADMIN` users). The very first person to register on a fresh database is
+auto-approved as `ADMIN` so there's always someone able to approve everyone
+else.
+
+- **Roles**: `ADMIN` (can approve/disable accounts and change roles) and
+  `USER` (regular project access).
+- **Status**: `PENDING` (awaiting approval, redirected to `/pending`),
+  `ACTIVE` (full access), `DISABLED` (blocked, redirected to `/pending`).
+- **Projects are per-user**: each project has an `ownerId`. A project only
+  ever shows up for the user who created it (admins see every project, for
+  oversight). This is enforced both in the UI (dashboard, project pages) and
+  server-side on every create/update/delete action, so a signed-in user
+  can't read or modify another user's project data even by calling a server
+  action directly.
+
 ## Project structure
 
 ```
@@ -106,7 +139,10 @@ prisma/
   seed.ts               # demo data — one project per framework
 src/
   app/[locale]/         # all routes, locale-prefixed (next-intl)
+    login/, register/, pending/  # auth pages
+    admin/users/        # admin-only user management (approve, roles)
     projects/[projectId]/
+      layout.tsx        # ownership gate — 404s if you don't own the project (or aren't admin)
       initiating/       # charter, stakeholders, business-case (PRINCE2)
       planning/         # wbs, schedule, risks, budget, stage-gates & tolerances (PRINCE2),
                          # backlog & sprint-planning (Scrum, replaces the above)
@@ -114,9 +150,12 @@ src/
       monitoring/        # status-report, raid, change-requests
       closing/           # lessons-learned, checklist
     actions/            # server actions (create/update/delete per resource)
+  app/api/auth/[...nextauth]/  # NextAuth route handler
   components/
     ui/                 # shadcn-style primitives (button, card, dialog, table, tabs, ...)
     layout/             # topbar, framework-aware project sidebar
+    auth/                # login/register forms, sign-out button
+    admin/               # user management table
     initiating/         # charter form, stakeholder matrix/table
     planning/           # WBS tree (dnd-kit), Gantt chart, risk/budget tables
     executing/          # Kanban task board, decisions log
@@ -127,13 +166,18 @@ src/
   lib/
     validations/        # zod schemas, one per resource
     prisma.ts, pm.ts, tree.ts, nav-config.ts
+    auth.ts              # NextAuth config (Credentials provider, JWT session)
+    authz.ts              # requireActiveUser / requireAdmin / requireProjectAccess guards
+  middleware.ts          # next-intl + auth/role routing (login, pending, admin gates)
 messages/
   de.json, en.json       # next-intl translation catalogs
 ```
 
 ## Data model
 
-`Project` is the root record; every artifact belongs to one project via
+`User` (`role`: `ADMIN` | `USER`, `status`: `PENDING` | `ACTIVE` | `DISABLED`)
+owns zero or more `Project`s via `Project.ownerId`. `Project` is otherwise the
+root record for everything else; every artifact belongs to one project via
 `framework` (`PMBOK` | `PRINCE2` | `SCRUM`), which also drives which nav items
 and views are shown. Core PMBOK-generic models: `ProjectCharter`,
 `Stakeholder`, `WorkPackage` (self-referencing tree with a separate

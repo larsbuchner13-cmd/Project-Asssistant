@@ -22,7 +22,6 @@ CREATE TABLE "users" (
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
 -- AlterTable
-ALTER TABLE "projects" ADD COLUMN     "ownerId" TEXT NOT NULL;
-
--- AddForeignKey
-ALTER TABLE "projects" ADD CONSTRAINT "projects_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+-- Nullable for now: existing rows get backfilled with an owner in the next
+-- migration before NOT NULL and the foreign key are enforced.
+ALTER TABLE "projects" ADD COLUMN     "ownerId" TEXT;

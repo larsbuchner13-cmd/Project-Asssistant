@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { setUserRole, setUserStatus } from "@/app/[locale]/actions/users";
+import { setUserRole, setUserStatus, type AdminActionResult } from "@/app/[locale]/actions/users";
 import { formatDate } from "@/lib/pm";
 import { useRouter } from "@/i18n/navigation";
 
@@ -41,14 +41,18 @@ export function UserTable({ users, currentUserId }: { users: AdminUser[]; curren
   const [pendingId, setPendingId] = React.useState<string | null>(null);
   const [error, setError] = React.useState<string | null>(null);
 
-  async function run(userId: string, action: () => Promise<void>) {
+  async function run(userId: string, action: () => Promise<AdminActionResult>) {
     setError(null);
     setPendingId(userId);
     try {
-      await action();
+      const result = await action();
+      if (!result.ok) {
+        setError(t(result.error));
+        return;
+      }
       router.refresh();
-    } catch (e) {
-      setError(e instanceof Error ? t(e.message as never) : t("admin.actionFailed"));
+    } catch {
+      setError(t("admin.actionFailed"));
     } finally {
       setPendingId(null);
     }

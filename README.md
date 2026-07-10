@@ -71,10 +71,12 @@ PRINCE2, Scrum), plus two demo accounts: `admin@pmcopilot.local` (role
 (role `USER`, owns the Scrum project). Both use the password `changeme123` —
 change it after first login in a real deployment.
 
-> The `ownerId` column on `projects` is required (`NOT NULL`), so this
-> migration assumes an empty database. If you already have projects in an
-> existing local database, run `npx prisma migrate reset` instead (it drops
-> and recreates the schema, then re-runs the seed).
+> If this is applied against a database that already has projects in it
+> (e.g. an existing production deployment predating user accounts), the
+> `20260709141000_backfill_project_owner` migration assigns every existing
+> project to a bootstrap admin account before making `ownerId` required —
+> no data is dropped. For a disposable local/dev database you can instead
+> run `npx prisma migrate reset` to start clean.
 
 ### 4. Start the dev server
 

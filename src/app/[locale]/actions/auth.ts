@@ -5,13 +5,20 @@ import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { registerFormSchema, type RegisterFormValues } from "@/lib/validations/auth";
 
-export async function registerUser(values: RegisterFormValues) {
+export type RegisterResult =
+  | { ok: true; isFirstUser: boolean }
+  | { ok: false; error: "auth.emailTaken" };
+
+// Returns a result object instead of throwing: Next.js redacts thrown Error
+// messages from Server Actions in production, so a translation-key message
+// like "auth.emailTaken" would never reach the client.
+export async function registerUser(values: RegisterFormValues): Promise<RegisterResult> {
   const parsed = registerFormSchema.parse(values);
   const email = parsed.email.toLowerCase().trim();
 
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) {
-    throw new Error("auth.emailTaken");
+    return { ok: false, error: "auth.emailTaken" };
   }
 
   const hashedPassword = await bcrypt.hash(parsed.password, 12);
@@ -31,5 +38,5 @@ export async function registerUser(values: RegisterFormValues) {
     },
   });
 
-  return { isFirstUser };
+  return { ok: true, isFirstUser };
 }

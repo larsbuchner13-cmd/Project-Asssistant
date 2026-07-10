@@ -26,20 +26,26 @@ export function RegisterForm() {
 
   async function onSubmit(values: RegisterFormValues) {
     setError(null);
+
+    let registerResult;
     try {
-      await registerUser(values);
-    } catch (e) {
-      const message = e instanceof Error ? e.message : "auth.registerFailed";
-      setError(t(message as never));
+      registerResult = await registerUser(values);
+    } catch {
+      setError(t("auth.registerFailed"));
       return;
     }
 
-    const result = await signIn("credentials", {
+    if (!registerResult.ok) {
+      setError(t(registerResult.error));
+      return;
+    }
+
+    const signInResult = await signIn("credentials", {
       email: values.email,
       password: values.password,
       redirect: false,
     });
-    if (result?.error) {
+    if (signInResult?.error) {
       router.push("/login");
       return;
     }

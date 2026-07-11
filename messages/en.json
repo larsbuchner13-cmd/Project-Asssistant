@@ -390,7 +390,16 @@
     "pendingTitle": "Account awaiting approval",
     "pendingSubtitle": "Your account was created and is waiting for an administrator to approve it. If you were just granted access, try signing out and back in.",
     "disabledTitle": "Account disabled",
-    "disabledSubtitle": "An administrator has disabled your account. Contact your administrator if you believe this is a mistake."
+    "disabledSubtitle": "An administrator has disabled your account. Contact your administrator if you believe this is a mistake.",
+    "account": "Account",
+    "changePassword": "Change password",
+    "changePasswordSubtitle": "Change the password for your account.",
+    "changePasswordFailed": "Could not change password. Please try again.",
+    "currentPassword": "Current password",
+    "currentPasswordWrong": "Current password is incorrect.",
+    "newPassword": "New password",
+    "confirmNewPassword": "Confirm new password",
+    "passwordChanged": "Password changed successfully."
   },
   "admin": {
     "title": "User management",

@@ -399,7 +399,16 @@
     "pendingTitle": "Konto wartet auf Freischaltung",
     "pendingSubtitle": "Dein Konto wurde erstellt und wartet auf die Freischaltung durch einen Administrator. Falls dir gerade eben Zugriff gewährt wurde, melde dich einmal ab und wieder an.",
     "disabledTitle": "Konto deaktiviert",
-    "disabledSubtitle": "Dein Konto wurde von einem Administrator deaktiviert. Wende dich an deinen Administrator, falls du glaubst, dass dies ein Irrtum ist."
+    "disabledSubtitle": "Dein Konto wurde von einem Administrator deaktiviert. Wende dich an deinen Administrator, falls du glaubst, dass dies ein Irrtum ist.",
+    "account": "Konto",
+    "changePassword": "Passwort ändern",
+    "changePasswordSubtitle": "Ändere das Passwort für dein Konto.",
+    "changePasswordFailed": "Passwort konnte nicht geändert werden. Bitte versuche es erneut.",
+    "currentPassword": "Aktuelles Passwort",
+    "currentPasswordWrong": "Aktuelles Passwort ist falsch.",
+    "newPassword": "Neues Passwort",
+    "confirmNewPassword": "Neues Passwort bestätigen",
+    "passwordChanged": "Passwort erfolgreich geändert."
   },
   "admin": {
     "title": "Benutzerverwaltung",

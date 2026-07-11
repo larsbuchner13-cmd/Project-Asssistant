@@ -3,7 +3,7 @@
 import { useTranslations, useLocale } from "next-intl";
 import { useTheme } from "next-themes";
 import { useSession } from "next-auth/react";
-import { Moon, Sun, ShieldCheck } from "lucide-react";
+import { Moon, Sun, ShieldCheck, UserCog } from "lucide-react";
 
 import { usePathname, useRouter, Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
@@ -58,6 +58,12 @@ export function Topbar() {
                 </Link>
               </Button>
             )}
+            <Button asChild variant="ghost" size="sm">
+              <Link href="/account">
+                <UserCog />
+                {tAuth("account")}
+              </Link>
+            </Button>
             <span className="hidden text-sm text-muted-foreground sm:inline">{session.user.email}</span>
             <SignOutButton size="sm" />
           </>

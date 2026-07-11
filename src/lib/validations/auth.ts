@@ -20,3 +20,16 @@ export const loginFormSchema = z.object({
 });
 
 export type LoginFormValues = z.infer<typeof loginFormSchema>;
+
+export const changePasswordFormSchema = z
+  .object({
+    currentPassword: z.string().min(1, "validation.required"),
+    newPassword: z.string().min(8, "validation.minLength8"),
+    confirmNewPassword: z.string().min(1, "validation.required"),
+  })
+  .refine((data) => data.newPassword === data.confirmNewPassword, {
+    message: "validation.passwordMismatch",
+    path: ["confirmNewPassword"],
+  });
+
+export type ChangePasswordFormValues = z.infer<typeof changePasswordFormSchema>;

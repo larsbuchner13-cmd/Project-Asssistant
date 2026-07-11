@@ -3,7 +3,13 @@
 import bcrypt from "bcryptjs";
 
 import { prisma } from "@/lib/prisma";
-import { registerFormSchema, type RegisterFormValues } from "@/lib/validations/auth";
+import { requireActiveUser } from "@/lib/authz";
+import {
+  registerFormSchema,
+  changePasswordFormSchema,
+  type RegisterFormValues,
+  type ChangePasswordFormValues,
+} from "@/lib/validations/auth";
 
 export type RegisterResult =
   | { ok: true; isFirstUser: boolean }
@@ -39,4 +45,22 @@ export async function registerUser(values: RegisterFormValues): Promise<Register
   });
 
   return { ok: true, isFirstUser };
+}
+
+export type ChangePasswordResult = { ok: true } | { ok: false; error: "auth.currentPasswordWrong" };
+
+export async function changePassword(values: ChangePasswordFormValues): Promise<ChangePasswordResult> {
+  const sessionUser = await requireActiveUser();
+  const parsed = changePasswordFormSchema.parse(values);
+
+  const user = await prisma.user.findUniqueOrThrow({ where: { id: sessionUser.id } });
+  const currentPasswordValid = await bcrypt.compare(parsed.currentPassword, user.password);
+  if (!currentPasswordValid) {
+    return { ok: false, error: "auth.currentPasswordWrong" };
+  }
+
+  const hashedPassword = await bcrypt.hash(parsed.newPassword, 12);
+  await prisma.user.update({ where: { id: sessionUser.id }, data: { password: hashedPassword } });
+
+  return { ok: true };
 }

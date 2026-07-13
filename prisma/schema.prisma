@@ -128,6 +128,26 @@ enum KnowledgeArea {
   STAKEHOLDER
 }
 
+enum ProcessRunStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum ProcessStepStatus {
+  LOCKED
+  READY
+  IN_PROGRESS
+  DONE
+}
+
+enum ApprovalStatus {
+  NOT_REQUIRED
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 // ---------------------------------------------------------------------------
 // Users
 // ---------------------------------------------------------------------------
@@ -143,6 +163,14 @@ model User {
   updatedAt DateTime   @updatedAt
 
   projects Project[]
+
+  // Process / Workflow OS
+  createdProcessTemplates  ProcessTemplate[]     @relation("ProcessTemplateCreatedBy")
+  processStepAssigneeOf    ProcessStepTemplate[] @relation("ProcessStepTemplateAssignee")
+  processStepApproverOf    ProcessStepTemplate[] @relation("ProcessStepTemplateApprover")
+  startedProcessRuns       ProcessRun[]          @relation("ProcessRunStartedBy")
+  processRunStepAssigneeOf ProcessRunStep[]      @relation("ProcessRunStepAssignee")
+  processRunStepApproverOf ProcessRunStep[]      @relation("ProcessRunStepApprover")
 
   @@map("users")
 }
@@ -197,6 +225,9 @@ model Project {
   stageGates   StageGate[]
   backlogItems BacklogItem[]
   sprints      Sprint[]
+
+  // Optional link from a company-wide workflow run to the project it supports
+  processRuns ProcessRun[]
 
   @@map("projects")
 }
@@ -539,4 +570,120 @@ model Sprint {
   items     BacklogItem[]
 
   @@map("sprints")
+}
+
+// ---------------------------------------------------------------------------
+// Process / Workflow OS — company-wide (not owner-scoped like Project).
+// Every active user can see every template and every run, matching the
+// "one system everyone works from" requirement. A template is a reusable
+// blueprint (ordered steps, each with a responsible party, an optional
+// approval gate, and a checklist); starting a run snapshots the template's
+// steps so later template edits never rewrite in-flight or historical runs.
+// ---------------------------------------------------------------------------
+
+model ProcessTemplate {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  category    String?
+  isActive    Boolean  @default(true)
+  createdById String
+  createdBy   User     @relation("ProcessTemplateCreatedBy", fields: [createdById], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  steps ProcessStepTemplate[]
+  runs  ProcessRun[]
+
+  @@map("process_templates")
+}
+
+model ProcessStepTemplate {
+  id               String          @id @default(cuid())
+  templateId       String
+  template         ProcessTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  name             String
+  description      String?
+  order            Int             @default(0)
+  responsibleRole  String? // free-text role/department, e.g. "Buchhaltung"
+  assigneeId       String?
+  assignee         User?           @relation("ProcessStepTemplateAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
+  requiresApproval Boolean         @default(false)
+  approverId       String?
+  approver         User?           @relation("ProcessStepTemplateApprover", fields: [approverId], references: [id], onDelete: SetNull)
+  targetDays       Float? // expected duration in days, used as a KPI target
+
+  checklistItems ProcessChecklistTemplateItem[]
+  runSteps       ProcessRunStep[]
+
+  @@map("process_step_templates")
+}
+
+model ProcessChecklistTemplateItem {
+  id     String              @id @default(cuid())
+  stepId String
+  step   ProcessStepTemplate @relation(fields: [stepId], references: [id], onDelete: Cascade)
+  label  String
+  order  Int                 @default(0)
+
+  @@map("process_checklist_template_items")
+}
+
+model ProcessRun {
+  id          String           @id @default(cuid())
+  templateId  String
+  template    ProcessTemplate  @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  name        String
+  status      ProcessRunStatus @default(ACTIVE)
+  projectId   String?
+  project     Project?         @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  startedById String
+  startedBy   User             @relation("ProcessRunStartedBy", fields: [startedById], references: [id], onDelete: Cascade)
+  startedAt   DateTime         @default(now())
+  completedAt DateTime?
+
+  steps ProcessRunStep[]
+
+  @@map("process_runs")
+}
+
+// Snapshot of a ProcessStepTemplate at run-start time, plus live progress.
+model ProcessRunStep {
+  id               String               @id @default(cuid())
+  runId            String
+  run              ProcessRun           @relation(fields: [runId], references: [id], onDelete: Cascade)
+  stepTemplateId   String?
+  stepTemplate     ProcessStepTemplate? @relation(fields: [stepTemplateId], references: [id], onDelete: SetNull)
+  order            Int
+  name             String
+  description      String?
+  responsibleRole  String?
+  assigneeId       String?
+  assignee         User?                @relation("ProcessRunStepAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
+  status           ProcessStepStatus    @default(LOCKED)
+  requiresApproval Boolean              @default(false)
+  approverId       String?
+  approver         User?                @relation("ProcessRunStepApprover", fields: [approverId], references: [id], onDelete: SetNull)
+  approvalStatus   ApprovalStatus       @default(NOT_REQUIRED)
+  approvalComment  String?
+  approvedAt       DateTime?
+  targetDays       Float?
+  startedAt        DateTime?
+  completedAt      DateTime?
+
+  checklistItems ProcessRunChecklistItem[]
+
+  @@map("process_run_steps")
+}
+
+model ProcessRunChecklistItem {
+  id        String         @id @default(cuid())
+  runStepId String
+  runStep   ProcessRunStep @relation(fields: [runStepId], references: [id], onDelete: Cascade)
+  label     String
+  order     Int            @default(0)
+  done      Boolean        @default(false)
+  doneAt    DateTime?
+
+  @@map("process_run_checklist_items")
 }

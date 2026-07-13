@@ -47,3 +47,22 @@ export async function requireProjectAccess(projectId: string): Promise<SessionUs
   }
   return user;
 }
+
+/**
+ * Process/workflow templates are company-wide: every active user can view
+ * and run them. Only the template's creator or an admin may edit the
+ * blueprint itself (steps, checklist, responsibilities, approvals).
+ */
+export async function requireTemplateEditAccess(templateId: string): Promise<SessionUser> {
+  const user = await requireActiveUser();
+  if (user.role === "ADMIN") return user;
+
+  const template = await prisma.processTemplate.findUnique({
+    where: { id: templateId },
+    select: { createdById: true },
+  });
+  if (!template || template.createdById !== user.id) {
+    throw new AuthzError("You do not have edit access to this process template.");
+  }
+  return user;
+}

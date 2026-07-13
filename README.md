@@ -12,6 +12,10 @@ Planning, a drag-and-drop Sprint Board, and a Burndown Chart. Selecting
 **PRINCE2** adds a Business Case document, Stage Gates with checklists, and
 Tolerance settings alongside the standard views.
 
+Alongside per-project frameworks, PM Copilot also ships a lightweight,
+**company-wide Process/Workflow module** ("Prozesse", ClickUp-style) — see
+[Processes](#processes-company-wide-workflow-os) below.
+
 ## Tech stack
 
 - Next.js 14 (App Router, TypeScript)
@@ -69,7 +73,10 @@ This creates the schema and seeds one demo project per framework (PMBOK,
 PRINCE2, Scrum), plus two demo accounts: `admin@pmcopilot.local` (role
 `ADMIN`, owns the PMBOK and PRINCE2 projects) and `member@pmcopilot.local`
 (role `USER`, owns the Scrum project). Both use the password `changeme123` —
-change it after first login in a real deployment.
+change it after first login in a real deployment. It also seeds two process
+templates ("Kundenanfrage bearbeiten", "Mitarbeiter-Onboarding") with a
+completed run, a run waiting on an approval, and a run with an overdue step —
+enough to see the KPI dashboard populated at `/processes/dashboard`.
 
 > If this is applied against a database that already has projects in it
 > (e.g. an existing production deployment predating user accounts), the
@@ -132,13 +139,46 @@ else.
   can't read or modify another user's project data even by calling a server
   action directly.
 
+## Processes (company-wide workflow OS)
+
+While `Project`s are per-user (see above), the **Process** module at
+`/processes` is company-wide: every `ACTIVE` user sees every process
+template and every running/completed workflow, regardless of who created or
+started it. It's aimed at small teams that want a few of ClickUp's core
+building blocks — reusable workflows, ordered steps with clear ownership,
+approval gates, checklists, and the KPIs those workflows generate — without
+paying for or configuring a full ClickUp instance.
+
+- **Templates** (`/processes`) — a reusable blueprint: a name/category plus
+  an ordered list of steps. Each step can have a responsible role and/or a
+  specific person, an optional approval gate (with a designated approver),
+  a target duration in days (used for the "overdue" KPI), and a checklist.
+  Only the template's creator or an admin can edit it; everyone can view it
+  and start a run from it.
+- **Runs** (`/processes/runs`) — starting a template snapshots its steps
+  into a `ProcessRun`, so later template edits never rewrite in-flight or
+  historical runs. The first step unlocks (`READY`); every later step stays
+  `LOCKED` until its predecessor is `DONE` — this is the "step 3 can't start
+  before step 2 is finished" requirement. A run can optionally link to a
+  `Project` for extra context.
+- **Approvals** — if a step requires approval, completing its checklist
+  submits it for approval instead of finishing it outright; only the
+  designated approver (or an admin) can approve or reject it. Approval is
+  what actually unlocks the next step.
+- **KPI dashboard** (`/processes/dashboard`) — computed live from run data:
+  active/completed workflow counts, average cycle time (overall and per
+  template), checklist completion across active workflows, pending
+  approvals, steps that have exceeded their target duration, and completed
+  workflows per week.
+
 ## Project structure
 
 ```
 prisma/
   schema.prisma        # data model (see below)
   migrations/           # one folder per migration — run `migrate deploy` after pulling new ones
-  seed.ts               # demo data — one project per framework
+  seed.ts               # demo data — one project per framework, plus two
+                          # process templates with example workflow runs
 src/
   app/[locale]/         # all routes, locale-prefixed (next-intl)
     login/, register/, pending/  # auth pages
@@ -151,6 +191,8 @@ src/
       executing/        # taskboard, decisions; sprint-board & burndown (Scrum, replaces these)
       monitoring/        # status-report, raid, change-requests
       closing/           # lessons-learned, checklist
+    processes/           # company-wide: template library, [templateId] editor,
+                          # runs/ list & [runId] stepper, dashboard/ (KPIs)
     actions/            # server actions (create/update/delete per resource)
   app/api/auth/[...nextauth]/  # NextAuth route handler
   components/
@@ -165,11 +207,13 @@ src/
     closing/            # lessons learned, closure checklist
     scrum/              # backlog, sprint planning, sprint board, burndown chart
     prince2/            # business case, stage gates, tolerances
+    processes/          # template editor, step form, run stepper, KPI dashboard
   lib/
     validations/        # zod schemas, one per resource
-    prisma.ts, pm.ts, tree.ts, nav-config.ts
+    prisma.ts, pm.ts, tree.ts, nav-config.ts, process-kpi.ts
     auth.ts              # NextAuth config (Credentials provider, JWT session)
-    authz.ts              # requireActiveUser / requireAdmin / requireProjectAccess guards
+    authz.ts              # requireActiveUser / requireAdmin / requireProjectAccess /
+                           # requireTemplateEditAccess guards
   middleware.ts          # next-intl + auth/role routing (login, pending, admin gates)
 messages/
   de.json, en.json       # next-intl translation catalogs
@@ -188,5 +232,15 @@ and views are shown. Core PMBOK-generic models: `ProjectCharter`,
 `Dependency`, `ChangeRequest`, `Milestone`, `LessonLearned`,
 `ClosureChecklistItem`. PRINCE2 adds `BusinessCase`, `Prince2Tolerance`,
 `StageGate` (checklist stored as JSON). Scrum adds `BacklogItem` (with
-`completedAt`, used to drive the burndown chart) and `Sprint`. See
-`prisma/schema.prisma` for the full schema.
+`completedAt`, used to drive the burndown chart) and `Sprint`.
+
+The Process module is a separate, company-wide graph rooted at
+`ProcessTemplate` (not `Project`): `ProcessStepTemplate` (ordered, with
+optional `assigneeId`/`approverId` and `targetDays`) and
+`ProcessChecklistTemplateItem` define the blueprint. Starting a workflow
+creates a `ProcessRun` whose `ProcessRunStep`s are a snapshot of the
+template's steps at that moment (each with its own `status` — `LOCKED` /
+`READY` / `IN_PROGRESS` / `DONE` — and `approvalStatus`) plus
+`ProcessRunChecklistItem`s tracking live progress. A `ProcessRun` can
+optionally reference a `Project`. See `prisma/schema.prisma` for the full
+schema.

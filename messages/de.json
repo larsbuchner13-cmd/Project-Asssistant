@@ -30,7 +30,8 @@
     "sprintPlanning": "Sprint-Planung",
     "sprintBoard": "Sprint-Board",
     "burndown": "Burndown-Chart",
-    "backToDashboard": "Zurück zur Übersicht"
+    "backToDashboard": "Zurück zur Übersicht",
+    "processes": "Prozesse"
   },
   "dashboard": {
     "title": "Projekte",
@@ -427,6 +428,110 @@
       "PENDING": "Wartet auf Freischaltung",
       "ACTIVE": "Aktiv",
       "DISABLED": "Deaktiviert"
+    }
+  },
+  "processes": {
+    "title": "Prozesse",
+    "subtitle": "Wiederverwendbare Workflows für euer Unternehmen – dokumentiert, mit klaren Zuständigkeiten, Freigaben und für alle Mitarbeitenden einsehbarem Fortschritt.",
+    "tabs": {
+      "templates": "Vorlagen",
+      "runs": "Workflows",
+      "dashboard": "KPI-Dashboard"
+    },
+    "newTemplate": "Neue Vorlage",
+    "noTemplates": "Noch keine Prozessvorlagen angelegt.",
+    "category": "Kategorie",
+    "categoryPlaceholder": "z. B. Vertrieb, Buchhaltung, Onboarding",
+    "createdBy": "Erstellt von",
+    "steps": "Schritte",
+    "startWorkflow": "Workflow starten",
+    "active": "Aktiv",
+    "inactive": "Archiviert",
+    "archive": "Archivieren",
+    "activate": "Aktivieren",
+    "deleteTemplateConfirm": "Vorlage wirklich löschen? Bereits gestartete Workflows bleiben erhalten.",
+    "template": {
+      "editDetails": "Details bearbeiten",
+      "backToLibrary": "Zurück zur Bibliothek",
+      "addStep": "Schritt hinzufügen",
+      "editStep": "Schritt bearbeiten",
+      "noSteps": "Noch keine Schritte angelegt. Lege den ersten Schritt an, damit dieser Workflow gestartet werden kann.",
+      "responsibleRole": "Rolle / Abteilung",
+      "responsiblePerson": "Verantwortliche Person",
+      "noPersonAssigned": "Keine Person zugewiesen",
+      "requiresApproval": "Freigabe erforderlich, bevor der nächste Schritt startet",
+      "approver": "Freigebende Person",
+      "targetDays": "Ziel-Durchlaufzeit (Tage)",
+      "checklist": "Checkliste",
+      "checklistPlaceholder": "Prüfpunkt eingeben und Enter drücken",
+      "deleteStepConfirm": "Schritt wirklich löschen?",
+      "stepLockedHint": "Schritt {n} kann erst gestartet werden, wenn Schritt {prev} abgeschlossen ist."
+    },
+    "startDialog": {
+      "title": "Workflow starten",
+      "name": "Name dieses Durchlaufs",
+      "namePlaceholder": "z. B. Kundenanfrage – Musterfirma GmbH",
+      "linkedProject": "Verknüpftes Projekt (optional)",
+      "noProject": "Kein Projekt",
+      "submit": "Starten"
+    },
+    "run": {
+      "title": "Workflows",
+      "subtitle": "Alle laufenden und abgeschlossenen Workflow-Durchläufe.",
+      "status": {
+        "ACTIVE": "Läuft",
+        "COMPLETED": "Abgeschlossen",
+        "CANCELLED": "Abgebrochen"
+      },
+      "startedBy": "Gestartet von",
+      "startedAt": "Gestartet am",
+      "completedAt": "Abgeschlossen am",
+      "linkedProject": "Projekt",
+      "cancel": "Workflow abbrechen",
+      "cancelConfirm": "Diesen Workflow wirklich abbrechen?",
+      "noRuns": "Noch keine Workflows gestartet.",
+      "progress": "Fortschritt",
+      "stepStatus": {
+        "LOCKED": "Gesperrt",
+        "READY": "Bereit",
+        "IN_PROGRESS": "In Bearbeitung",
+        "DONE": "Erledigt"
+      },
+      "approvalStatus": {
+        "NOT_REQUIRED": "–",
+        "PENDING": "Freigabe ausstehend",
+        "APPROVED": "Freigegeben",
+        "REJECTED": "Abgelehnt"
+      },
+      "start": "Schritt starten",
+      "complete": "Schritt abschließen",
+      "submitForApproval": "Zur Freigabe einreichen",
+      "approve": "Freigeben",
+      "reject": "Ablehnen",
+      "rejectComment": "Grund der Ablehnung (optional)",
+      "resubmit": "Erneut einreichen",
+      "waitingForPredecessor": "Wartet auf den vorherigen Schritt",
+      "assignedTo": "Zuständig",
+      "approvedBy": "Freigegeben von",
+      "checklistIncomplete": "Nicht alle Checklistenpunkte sind abgehakt",
+      "noChecklist": "Keine Checklistenpunkte",
+      "rejectedNotice": "Abgelehnt – bitte überarbeiten und erneut einreichen."
+    },
+    "kpi": {
+      "title": "KPI-Dashboard",
+      "subtitle": "Kennzahlen aus allen laufenden und abgeschlossenen Workflows – live aus der täglichen Arbeit generiert.",
+      "activeRuns": "Laufende Workflows",
+      "completedRuns": "Abgeschlossene Workflows",
+      "avgCycleTime": "Ø Durchlaufzeit",
+      "days": "Tage",
+      "pendingApprovals": "Offene Freigaben",
+      "overdueSteps": "Überfällige Schritte",
+      "checklistCompletion": "Checklisten-Fortschritt (laufende Workflows)",
+      "byTemplate": "Ø Durchlaufzeit nach Vorlage",
+      "throughput": "Abgeschlossene Workflows pro Woche",
+      "noData": "Noch keine Daten – starte einen Workflow, um KPIs zu sehen.",
+      "runsCount": "Durchläufe",
+      "since": "seit"
     }
   }
 }

@@ -3,7 +3,7 @@
 import { useTranslations, useLocale } from "next-intl";
 import { useTheme } from "next-themes";
 import { useSession } from "next-auth/react";
-import { Moon, Sun, ShieldCheck, UserCog } from "lucide-react";
+import { Moon, Sun, ShieldCheck, UserCog, Workflow } from "lucide-react";
 
 import { usePathname, useRouter, Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,7 @@ import { locales } from "@/i18n/config";
 
 export function Topbar() {
   const t = useTranslations("app");
+  const tNav = useTranslations("nav");
   const tAuth = useTranslations("auth");
   const { theme, setTheme } = useTheme();
   const { data: session } = useSession();
@@ -50,6 +51,12 @@ export function Topbar() {
         </Button>
         {session?.user && (
           <>
+            <Button asChild variant="ghost" size="sm">
+              <Link href="/processes">
+                <Workflow />
+                {tNav("processes")}
+              </Link>
+            </Button>
             {session.user.role === "ADMIN" && (
               <Button asChild variant="ghost" size="sm">
                 <Link href="/admin/users">

@@ -30,7 +30,8 @@
     "sprintPlanning": "Sprint Planning",
     "sprintBoard": "Sprint Board",
     "burndown": "Burndown Chart",
-    "backToDashboard": "Back to Dashboard"
+    "backToDashboard": "Back to Dashboard",
+    "processes": "Processes"
   },
   "dashboard": {
     "title": "Projects",
@@ -428,5 +429,109 @@
     "totalPoints": "Total Story Points",
     "noPoints": "No story points in this sprint",
     "notStarted": "Sprint hasn't started yet"
+  },
+  "processes": {
+    "title": "Processes",
+    "subtitle": "Reusable workflows for your company – documented, with clear ownership, approvals, and progress visible to everyone.",
+    "tabs": {
+      "templates": "Templates",
+      "runs": "Workflows",
+      "dashboard": "KPI Dashboard"
+    },
+    "newTemplate": "New Template",
+    "noTemplates": "No process templates yet.",
+    "category": "Category",
+    "categoryPlaceholder": "e.g. Sales, Accounting, Onboarding",
+    "createdBy": "Created by",
+    "steps": "Steps",
+    "startWorkflow": "Start Workflow",
+    "active": "Active",
+    "inactive": "Archived",
+    "archive": "Archive",
+    "activate": "Activate",
+    "deleteTemplateConfirm": "Delete this template? Workflows already started stay intact.",
+    "template": {
+      "editDetails": "Edit details",
+      "backToLibrary": "Back to library",
+      "addStep": "Add Step",
+      "editStep": "Edit Step",
+      "noSteps": "No steps yet. Add the first step so this workflow can be started.",
+      "responsibleRole": "Role / Department",
+      "responsiblePerson": "Responsible Person",
+      "noPersonAssigned": "No person assigned",
+      "requiresApproval": "Requires approval before the next step unlocks",
+      "approver": "Approver",
+      "targetDays": "Target Duration (days)",
+      "checklist": "Checklist",
+      "checklistPlaceholder": "Enter a checklist item and press Enter",
+      "deleteStepConfirm": "Delete this step?",
+      "stepLockedHint": "Step {n} can only start once step {prev} is complete."
+    },
+    "startDialog": {
+      "title": "Start Workflow",
+      "name": "Name of this run",
+      "namePlaceholder": "e.g. Customer request – Acme GmbH",
+      "linkedProject": "Linked project (optional)",
+      "noProject": "No project",
+      "submit": "Start"
+    },
+    "run": {
+      "title": "Workflows",
+      "subtitle": "All active and completed workflow runs.",
+      "status": {
+        "ACTIVE": "Running",
+        "COMPLETED": "Completed",
+        "CANCELLED": "Cancelled"
+      },
+      "startedBy": "Started by",
+      "startedAt": "Started at",
+      "completedAt": "Completed at",
+      "linkedProject": "Project",
+      "cancel": "Cancel Workflow",
+      "cancelConfirm": "Cancel this workflow?",
+      "noRuns": "No workflows started yet.",
+      "progress": "Progress",
+      "stepStatus": {
+        "LOCKED": "Locked",
+        "READY": "Ready",
+        "IN_PROGRESS": "In Progress",
+        "DONE": "Done"
+      },
+      "approvalStatus": {
+        "NOT_REQUIRED": "–",
+        "PENDING": "Approval pending",
+        "APPROVED": "Approved",
+        "REJECTED": "Rejected"
+      },
+      "start": "Start Step",
+      "complete": "Complete Step",
+      "submitForApproval": "Submit for Approval",
+      "approve": "Approve",
+      "reject": "Reject",
+      "rejectComment": "Reason for rejection (optional)",
+      "resubmit": "Resubmit",
+      "waitingForPredecessor": "Waiting on the previous step",
+      "assignedTo": "Assigned to",
+      "approvedBy": "Approved by",
+      "checklistIncomplete": "Not all checklist items are checked",
+      "noChecklist": "No checklist items",
+      "rejectedNotice": "Rejected – please rework and resubmit."
+    },
+    "kpi": {
+      "title": "KPI Dashboard",
+      "subtitle": "Metrics generated live from every active and completed workflow.",
+      "activeRuns": "Active Workflows",
+      "completedRuns": "Completed Workflows",
+      "avgCycleTime": "Avg. Cycle Time",
+      "days": "days",
+      "pendingApprovals": "Pending Approvals",
+      "overdueSteps": "Overdue Steps",
+      "checklistCompletion": "Checklist Completion (active workflows)",
+      "byTemplate": "Avg. Cycle Time by Template",
+      "throughput": "Workflows Completed per Week",
+      "noData": "No data yet – start a workflow to see KPIs.",
+      "runsCount": "runs",
+      "since": "since"
+    }
   }
 }

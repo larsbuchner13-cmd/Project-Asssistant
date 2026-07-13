@@ -439,12 +439,251 @@ async function seedScrumProject(ownerId: string) {
   return project;
 }
 
+type StepTemplateWithChecklist = {
+  id: string;
+  order: number;
+  name: string;
+  description: string | null;
+  responsibleRole: string | null;
+  assigneeId: string | null;
+  requiresApproval: boolean;
+  approverId: string | null;
+  targetDays: number | null;
+  checklistItems: { label: string; order: number }[];
+};
+
+function stepSnapshot(
+  step: StepTemplateWithChecklist,
+  status: "LOCKED" | "READY" | "IN_PROGRESS" | "DONE",
+  opts: {
+    startedAt?: Date;
+    completedAt?: Date;
+    approvalStatus?: "NOT_REQUIRED" | "PENDING" | "APPROVED" | "REJECTED";
+    approvedAt?: Date;
+    allChecked?: boolean;
+  } = {}
+) {
+  const allChecked = opts.allChecked ?? status === "DONE";
+  return {
+    stepTemplateId: step.id,
+    order: step.order,
+    name: step.name,
+    description: step.description,
+    responsibleRole: step.responsibleRole,
+    assigneeId: step.assigneeId,
+    requiresApproval: step.requiresApproval,
+    approverId: step.approverId,
+    targetDays: step.targetDays,
+    status,
+    approvalStatus:
+      opts.approvalStatus ?? (step.requiresApproval && status === "DONE" ? "APPROVED" : "NOT_REQUIRED"),
+    approvedAt: opts.approvedAt,
+    startedAt: opts.startedAt,
+    completedAt: opts.completedAt,
+    checklistItems: {
+      create: step.checklistItems.map((item) => ({
+        label: item.label,
+        order: item.order,
+        done: allChecked,
+        doneAt: allChecked ? opts.completedAt ?? opts.startedAt : null,
+      })),
+    },
+  };
+}
+
+async function seedProcesses(admin: { id: string }, member: { id: string }) {
+  const customerTemplate = await prisma.processTemplate.create({
+    data: {
+      name: "Kundenanfrage bearbeiten",
+      description:
+        "Vom Erstkontakt bis zum abgeschlossenen Auftrag – jede Anfrage durchläuft dieselben geprüften Schritte.",
+      category: "Vertrieb",
+      createdById: admin.id,
+      steps: {
+        create: [
+          {
+            order: 0,
+            name: "Anfrage erfassen",
+            description: "Erstkontakt dokumentieren und Bedarf klären.",
+            responsibleRole: "Vertrieb",
+            assigneeId: member.id,
+            targetDays: 1,
+            checklistItems: {
+              create: [
+                { order: 0, label: "Kontaktdaten erfasst" },
+                { order: 1, label: "Bedarf dokumentiert" },
+              ],
+            },
+          },
+          {
+            order: 1,
+            name: "Angebot erstellen",
+            description: "Angebot kalkulieren und zur Freigabe einreichen.",
+            responsibleRole: "Vertrieb",
+            assigneeId: member.id,
+            requiresApproval: true,
+            approverId: admin.id,
+            targetDays: 2,
+            checklistItems: {
+              create: [
+                { order: 0, label: "Preise geprüft" },
+                { order: 1, label: "Angebot verschickt" },
+              ],
+            },
+          },
+          {
+            order: 2,
+            name: "Auftrag abschließen",
+            description: "Vertrag unterschreiben lassen und Projekt anlegen.",
+            responsibleRole: "Geschäftsführung",
+            assigneeId: admin.id,
+            targetDays: 1,
+            checklistItems: {
+              create: [
+                { order: 0, label: "Vertrag unterschrieben" },
+                { order: 1, label: "Projekt angelegt" },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    include: { steps: { orderBy: { order: "asc" }, include: { checklistItems: true } } },
+  });
+
+  const onboardingTemplate = await prisma.processTemplate.create({
+    data: {
+      name: "Mitarbeiter-Onboarding",
+      description: "Damit neue Kolleg:innen ab Tag 1 produktiv arbeiten können und nichts vergessen wird.",
+      category: "HR",
+      createdById: admin.id,
+      steps: {
+        create: [
+          {
+            order: 0,
+            name: "Vorbereitung vor Start",
+            responsibleRole: "Office Management",
+            assigneeId: admin.id,
+            targetDays: 1,
+            checklistItems: {
+              create: [
+                { order: 0, label: "Arbeitsplatz eingerichtet" },
+                { order: 1, label: "Zugänge angelegt" },
+                { order: 2, label: "Willkommensmail verschickt" },
+              ],
+            },
+          },
+          {
+            order: 1,
+            name: "Erster Arbeitstag",
+            responsibleRole: "Team Lead",
+            assigneeId: admin.id,
+            targetDays: 1,
+            checklistItems: {
+              create: [
+                { order: 0, label: "Einführungsgespräch geführt" },
+                { order: 1, label: "Team vorgestellt" },
+              ],
+            },
+          },
+          {
+            order: 2,
+            name: "30-Tage-Review",
+            responsibleRole: "Geschäftsführung",
+            assigneeId: admin.id,
+            requiresApproval: true,
+            approverId: admin.id,
+            targetDays: 30,
+            checklistItems: {
+              create: [
+                { order: 0, label: "Feedbackgespräch geführt" },
+                { order: 1, label: "Probezeitbeurteilung dokumentiert" },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    include: { steps: { orderBy: { order: "asc" }, include: { checklistItems: true } } },
+  });
+
+  const [cs1, cs2, cs3] = customerTemplate.steps;
+
+  // Completed run — feeds the KPI dashboard's cycle-time history.
+  await prisma.processRun.create({
+    data: {
+      templateId: customerTemplate.id,
+      name: "Kundenanfrage – Musterfirma GmbH",
+      status: "COMPLETED",
+      startedById: member.id,
+      startedAt: daysFromNow(-12),
+      completedAt: daysFromNow(-8),
+      steps: {
+        create: [
+          stepSnapshot(cs1, "DONE", { startedAt: daysFromNow(-12), completedAt: daysFromNow(-11) }),
+          stepSnapshot(cs2, "DONE", {
+            startedAt: daysFromNow(-11),
+            completedAt: daysFromNow(-9),
+            approvalStatus: "APPROVED",
+            approvedAt: daysFromNow(-9),
+          }),
+          stepSnapshot(cs3, "DONE", { startedAt: daysFromNow(-9), completedAt: daysFromNow(-8) }),
+        ],
+      },
+    },
+  });
+
+  // Active run sitting on a pending approval — shows up on the KPI dashboard
+  // and demonstrates that step 3 stays locked until it's resolved.
+  await prisma.processRun.create({
+    data: {
+      templateId: customerTemplate.id,
+      name: "Kundenanfrage – Nordwind AG",
+      status: "ACTIVE",
+      startedById: member.id,
+      startedAt: daysFromNow(-3),
+      steps: {
+        create: [
+          stepSnapshot(cs1, "DONE", { startedAt: daysFromNow(-3), completedAt: daysFromNow(-2) }),
+          stepSnapshot(cs2, "IN_PROGRESS", {
+            startedAt: daysFromNow(-2),
+            approvalStatus: "PENDING",
+            allChecked: true,
+          }),
+          stepSnapshot(cs3, "LOCKED"),
+        ],
+      },
+    },
+  });
+
+  const [os1, os2, os3] = onboardingTemplate.steps;
+
+  // Active run with a step past its target duration — surfaces in "Überfällige Schritte".
+  await prisma.processRun.create({
+    data: {
+      templateId: onboardingTemplate.id,
+      name: "Onboarding – Max Mustermann",
+      status: "ACTIVE",
+      startedById: admin.id,
+      startedAt: daysFromNow(-5),
+      steps: {
+        create: [
+          stepSnapshot(os1, "IN_PROGRESS", { startedAt: daysFromNow(-5) }),
+          stepSnapshot(os2, "LOCKED"),
+          stepSnapshot(os3, "LOCKED"),
+        ],
+      },
+    },
+  });
+}
+
 async function main() {
   console.log("Seeding database...");
   const { admin, member } = await seedUsers();
   await seedPmbokProject(admin.id);
   await seedPrince2Project(admin.id);
   await seedScrumProject(member.id);
+  await seedProcesses(admin, member);
   console.log("Seed complete.");
   console.log("Login as admin@pmcopilot.local / member@pmcopilot.local, password: changeme123");
 }

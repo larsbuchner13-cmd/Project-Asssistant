@@ -42,7 +42,8 @@
     "openHighRisks": "Offene hohe Risiken",
     "framework": "Framework",
     "status": "Status",
-    "openProject": "Projekt öffnen"
+    "openProject": "Projekt öffnen",
+    "deleteProjectConfirm": "Dieses Projekt wirklich unwiderruflich löschen? Alle zugehörigen Daten (Arbeitspakete, Aufgaben, Risiken, Berichte usw.) werden mitgelöscht."
   },
   "framework": {
     "PMBOK": "PMBOK (prädiktiv)",

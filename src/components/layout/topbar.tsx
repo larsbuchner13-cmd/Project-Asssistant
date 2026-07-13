@@ -3,7 +3,7 @@
 import { useTranslations, useLocale } from "next-intl";
 import { useTheme } from "next-themes";
 import { useSession } from "next-auth/react";
-import { Moon, Sun, ShieldCheck, UserCog, Workflow } from "lucide-react";
+import { Moon, Sun, ShieldCheck, UserCog, Workflow, LayoutDashboard } from "lucide-react";
 
 import { usePathname, useRouter, Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
@@ -22,10 +22,10 @@ export function Topbar() {
 
   return (
     <header className="no-print flex h-14 shrink-0 items-center justify-between border-b border-border px-6">
-      <div className="flex items-baseline gap-2">
+      <Link href="/" className="flex items-baseline gap-2">
         <span className="text-base font-semibold">{t("name")}</span>
         <span className="hidden text-xs text-muted-foreground sm:inline">{t("tagline")}</span>
-      </div>
+      </Link>
       <div className="flex items-center gap-2">
         <div className="flex overflow-hidden rounded-md border border-input text-xs">
           {locales.map((l) => (
@@ -51,6 +51,12 @@ export function Topbar() {
         </Button>
         {session?.user && (
           <>
+            <Button asChild variant="ghost" size="sm">
+              <Link href="/">
+                <LayoutDashboard />
+                {tNav("dashboard")}
+              </Link>
+            </Button>
             <Button asChild variant="ghost" size="sm">
               <Link href="/processes">
                 <Workflow />

@@ -42,7 +42,8 @@
     "openHighRisks": "Open High Risks",
     "framework": "Framework",
     "status": "Status",
-    "openProject": "Open Project"
+    "openProject": "Open Project",
+    "deleteProjectConfirm": "Permanently delete this project? All related data (work packages, tasks, risks, reports, etc.) will be deleted too."
   },
   "framework": {
     "PMBOK": "PMBOK (predictive)",

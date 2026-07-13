@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 
 import { prisma } from "@/lib/prisma";
-import { requireActiveUser } from "@/lib/authz";
+import { requireActiveUser, requireProjectAccess } from "@/lib/authz";
 import { projectFormSchema, type ProjectFormValues } from "@/lib/validations/project";
 
 export async function createProject(values: ProjectFormValues) {
@@ -24,4 +24,10 @@ export async function createProject(values: ProjectFormValues) {
 
   revalidatePath("/", "layout");
   return project;
+}
+
+export async function deleteProject(projectId: string) {
+  await requireProjectAccess(projectId);
+  await prisma.project.delete({ where: { id: projectId } });
+  revalidatePath("/", "layout");
 }

@@ -1,12 +1,13 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { LayoutDashboard, Lock } from "lucide-react";
+import { LayoutDashboard, Lock, Trash2 } from "lucide-react";
 import type { Framework } from "@prisma/client";
 
-import { Link, usePathname } from "@/i18n/navigation";
+import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { getProjectNavGroups } from "@/lib/nav-config";
+import { deleteProject } from "@/app/[locale]/actions/projects";
 
 export function ProjectSidebar({
   projectId,
@@ -18,8 +19,18 @@ export function ProjectSidebar({
   framework: Framework;
 }) {
   const t = useTranslations("nav");
+  const tCommon = useTranslations("common");
+  const tDashboard = useTranslations("dashboard");
   const pathname = usePathname();
+  const router = useRouter();
   const projectNavGroups = getProjectNavGroups(framework);
+
+  async function handleDelete() {
+    if (!window.confirm(tDashboard("deleteProjectConfirm"))) return;
+    await deleteProject(projectId);
+    router.push("/");
+    router.refresh();
+  }
 
   return (
     <nav className="no-print flex h-full w-64 shrink-0 flex-col border-r border-border bg-card/50 p-4">
@@ -30,9 +41,20 @@ export function ProjectSidebar({
         <LayoutDashboard className="h-4 w-4" />
         {t("backToDashboard")}
       </Link>
-      <div className="mb-4 truncate text-sm font-semibold" title={projectName}>
-        {projectName}
+      <div className="mb-1 flex items-start justify-between gap-2">
+        <div className="truncate text-sm font-semibold" title={projectName}>
+          {projectName}
+        </div>
+        <button
+          type="button"
+          onClick={handleDelete}
+          title={tCommon("delete")}
+          className="shrink-0 text-muted-foreground hover:text-destructive"
+        >
+          <Trash2 className="h-3.5 w-3.5" />
+        </button>
       </div>
+      <div className="mb-4" />
       <div className="flex flex-1 flex-col gap-5 overflow-y-auto">
         {projectNavGroups.map((group) => (
           <div key={group.key}>

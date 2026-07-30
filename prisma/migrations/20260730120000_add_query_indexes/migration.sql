@@ -1,0 +1,38 @@
+-- Add indexes for the ownership, status, ordering, and relation filters used
+-- by project pages and the company-wide process dashboard.
+CREATE INDEX "projects_ownerId_status_idx" ON "projects"("ownerId", "status");
+CREATE INDEX "stakeholders_projectId_idx" ON "stakeholders"("projectId");
+CREATE INDEX "work_packages_projectId_parentId_order_idx" ON "work_packages"("projectId", "parentId", "order");
+CREATE INDEX "work_packages_projectId_status_idx" ON "work_packages"("projectId", "status");
+CREATE INDEX "risks_projectId_status_idx" ON "risks"("projectId", "status");
+CREATE INDEX "tasks_projectId_status_order_idx" ON "tasks"("projectId", "status", "order");
+CREATE INDEX "tasks_workPackageId_idx" ON "tasks"("workPackageId");
+CREATE INDEX "decisions_projectId_meetingDate_idx" ON "decisions"("projectId", "meetingDate");
+CREATE INDEX "action_items_decisionId_done_idx" ON "action_items"("decisionId", "done");
+CREATE INDEX "status_reports_projectId_weekOf_idx" ON "status_reports"("projectId", "weekOf");
+CREATE INDEX "issues_projectId_status_idx" ON "issues"("projectId", "status");
+CREATE INDEX "assumptions_projectId_status_idx" ON "assumptions"("projectId", "status");
+CREATE INDEX "dependencies_projectId_status_idx" ON "dependencies"("projectId", "status");
+CREATE INDEX "change_requests_projectId_status_idx" ON "change_requests"("projectId", "status");
+CREATE INDEX "milestones_projectId_dueDate_idx" ON "milestones"("projectId", "dueDate");
+CREATE INDEX "milestones_workPackageId_idx" ON "milestones"("workPackageId");
+CREATE INDEX "lessons_learned_projectId_idx" ON "lessons_learned"("projectId");
+CREATE INDEX "closure_checklist_items_projectId_order_idx" ON "closure_checklist_items"("projectId", "order");
+CREATE INDEX "stage_gates_projectId_order_idx" ON "stage_gates"("projectId", "order");
+CREATE INDEX "backlog_items_projectId_status_order_idx" ON "backlog_items"("projectId", "status", "order");
+CREATE INDEX "backlog_items_sprintId_order_idx" ON "backlog_items"("sprintId", "order");
+CREATE INDEX "sprints_projectId_startDate_idx" ON "sprints"("projectId", "startDate");
+CREATE INDEX "process_templates_createdById_isActive_idx" ON "process_templates"("createdById", "isActive");
+CREATE INDEX "process_step_templates_templateId_order_idx" ON "process_step_templates"("templateId", "order");
+CREATE INDEX "process_step_templates_assigneeId_idx" ON "process_step_templates"("assigneeId");
+CREATE INDEX "process_step_templates_approverId_idx" ON "process_step_templates"("approverId");
+CREATE INDEX "process_checklist_template_items_stepId_order_idx" ON "process_checklist_template_items"("stepId", "order");
+CREATE INDEX "process_runs_templateId_status_idx" ON "process_runs"("templateId", "status");
+CREATE INDEX "process_runs_projectId_idx" ON "process_runs"("projectId");
+CREATE INDEX "process_runs_startedById_startedAt_idx" ON "process_runs"("startedById", "startedAt");
+CREATE INDEX "process_runs_status_startedAt_idx" ON "process_runs"("status", "startedAt");
+CREATE INDEX "process_run_steps_runId_order_idx" ON "process_run_steps"("runId", "order");
+CREATE INDEX "process_run_steps_assigneeId_status_idx" ON "process_run_steps"("assigneeId", "status");
+CREATE INDEX "process_run_steps_approverId_approvalStatus_idx" ON "process_run_steps"("approverId", "approvalStatus");
+CREATE INDEX "process_run_steps_stepTemplateId_idx" ON "process_run_steps"("stepTemplateId");
+CREATE INDEX "process_run_checklist_items_runStepId_order_idx" ON "process_run_checklist_items"("runStepId", "order");

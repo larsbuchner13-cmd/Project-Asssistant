@@ -229,6 +229,7 @@ model Project {
   // Optional link from a company-wide workflow run to the project it supports
   processRuns ProcessRun[]
 
+  @@index([ownerId, status])
   @@map("projects")
 }
 
@@ -264,6 +265,7 @@ model Stakeholder {
   notes              String?
   createdAt          DateTime           @default(now())
 
+  @@index([projectId])
   @@map("stakeholders")
 }
 
@@ -297,6 +299,8 @@ model WorkPackage {
   predecessorOf WorkPackageDependency[] @relation("Predecessor")
   successorOf   WorkPackageDependency[] @relation("Successor")
 
+  @@index([projectId, parentId, order])
+  @@index([projectId, status])
   @@map("work_packages")
 }
 
@@ -325,6 +329,7 @@ model Risk {
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
 
+  @@index([projectId, status])
   @@map("risks")
 }
 
@@ -348,6 +353,8 @@ model Task {
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
 
+  @@index([projectId, status, order])
+  @@index([workPackageId])
   @@map("tasks")
 }
 
@@ -362,6 +369,7 @@ model Decision {
   actionItems  ActionItem[]
   createdAt    DateTime     @default(now())
 
+  @@index([projectId, meetingDate])
   @@map("decisions")
 }
 
@@ -374,6 +382,7 @@ model ActionItem {
   dueDate     DateTime?
   done        Boolean   @default(false)
 
+  @@index([decisionId, done])
   @@map("action_items")
 }
 
@@ -391,6 +400,7 @@ model StatusReport {
   budgetBurnPct Float
   createdAt     DateTime  @default(now())
 
+  @@index([projectId, weekOf])
   @@map("status_reports")
 }
 
@@ -405,6 +415,7 @@ model Issue {
   raisedDate   DateTime    @default(now())
   resolvedDate DateTime?
 
+  @@index([projectId, status])
   @@map("issues")
 }
 
@@ -417,6 +428,7 @@ model Assumption {
   owner       String?
   createdAt   DateTime         @default(now())
 
+  @@index([projectId, status])
   @@map("assumptions")
 }
 
@@ -430,6 +442,7 @@ model Dependency {
   owner       String?
   createdAt   DateTime         @default(now())
 
+  @@index([projectId, status])
   @@map("dependencies")
 }
 
@@ -446,6 +459,7 @@ model ChangeRequest {
   decisionDate DateTime?
   createdAt    DateTime            @default(now())
 
+  @@index([projectId, status])
   @@map("change_requests")
 }
 
@@ -459,6 +473,8 @@ model Milestone {
   dueDate       DateTime
   achieved      Boolean      @default(false)
 
+  @@index([projectId, dueDate])
+  @@index([workPackageId])
   @@map("milestones")
 }
 
@@ -476,6 +492,7 @@ model LessonLearned {
   knowledgeArea   KnowledgeArea
   createdAt       DateTime      @default(now())
 
+  @@index([projectId])
   @@map("lessons_learned")
 }
 
@@ -488,6 +505,7 @@ model ClosureChecklistItem {
   done      Boolean @default(false)
   order     Int     @default(0)
 
+  @@index([projectId, order])
   @@map("closure_checklist_items")
 }
 
@@ -534,6 +552,7 @@ model StageGate {
   approved  Boolean  @default(false)
   order     Int      @default(0)
 
+  @@index([projectId, order])
   @@map("stage_gates")
 }
 
@@ -556,6 +575,8 @@ model BacklogItem {
   completedAt DateTime?
   createdAt   DateTime   @default(now())
 
+  @@index([projectId, status, order])
+  @@index([sprintId, order])
   @@map("backlog_items")
 }
 
@@ -569,6 +590,7 @@ model Sprint {
   endDate   DateTime
   items     BacklogItem[]
 
+  @@index([projectId, startDate])
   @@map("sprints")
 }
 
@@ -595,6 +617,7 @@ model ProcessTemplate {
   steps ProcessStepTemplate[]
   runs  ProcessRun[]
 
+  @@index([createdById, isActive])
   @@map("process_templates")
 }
 
@@ -616,6 +639,9 @@ model ProcessStepTemplate {
   checklistItems ProcessChecklistTemplateItem[]
   runSteps       ProcessRunStep[]
 
+  @@index([templateId, order])
+  @@index([assigneeId])
+  @@index([approverId])
   @@map("process_step_templates")
 }
 
@@ -626,6 +652,7 @@ model ProcessChecklistTemplateItem {
   label  String
   order  Int                 @default(0)
 
+  @@index([stepId, order])
   @@map("process_checklist_template_items")
 }
 
@@ -644,6 +671,10 @@ model ProcessRun {
 
   steps ProcessRunStep[]
 
+  @@index([templateId, status])
+  @@index([projectId])
+  @@index([startedById, startedAt])
+  @@index([status, startedAt])
   @@map("process_runs")
 }
 
@@ -673,6 +704,10 @@ model ProcessRunStep {
 
   checklistItems ProcessRunChecklistItem[]
 
+  @@index([runId, order])
+  @@index([assigneeId, status])
+  @@index([approverId, approvalStatus])
+  @@index([stepTemplateId])
   @@map("process_run_steps")
 }
 
@@ -685,5 +720,6 @@ model ProcessRunChecklistItem {
   done      Boolean        @default(false)
   doneAt    DateTime?
 
+  @@index([runStepId, order])
   @@map("process_run_checklist_items")
 }

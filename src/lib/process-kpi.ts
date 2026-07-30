@@ -1,4 +1,11 @@
-import { differenceInCalendarDays, startOfWeek, addWeeks, isWithinInterval, endOfWeek } from "date-fns";
+import {
+  addWeeks,
+  differenceInCalendarDays,
+  differenceInHours,
+  endOfWeek,
+  isWithinInterval,
+  startOfWeek,
+} from "date-fns";
 
 type KpiChecklistItem = { done: boolean };
 type KpiStep = {
@@ -21,7 +28,7 @@ type KpiRun = {
   steps: KpiStep[];
 };
 
-export function computeProcessKpis(runs: KpiRun[]) {
+export function computeProcessKpis(runs: KpiRun[], now = new Date()) {
   const activeRuns = runs.filter((r) => r.status === "ACTIVE");
   const completedRuns = runs.filter((r) => r.status === "COMPLETED");
 
@@ -36,21 +43,20 @@ export function computeProcessKpis(runs: KpiRun[]) {
       .map((s) => ({ runId: run.id, runName: run.name, stepName: s.name, approver: s.approver?.name ?? null }))
   );
 
-  const now = new Date();
   const overdueSteps = activeRuns.flatMap((run) =>
     run.steps
       .filter((s) => (s.status === "READY" || s.status === "IN_PROGRESS") && s.targetDays != null)
       .map((s) => ({
         run,
         s,
-        elapsedDays: differenceInCalendarDays(now, s.startedAt ?? run.startedAt),
+        elapsedDays: differenceInHours(now, s.startedAt ?? run.startedAt) / 24,
       }))
       .filter(({ elapsedDays, s }) => elapsedDays > (s.targetDays as number))
       .map(({ run, s, elapsedDays }) => ({
         runId: run.id,
         runName: run.name,
         stepName: s.name,
-        elapsedDays,
+        elapsedDays: Math.round(elapsedDays * 10) / 10,
         targetDays: s.targetDays as number,
       }))
   );

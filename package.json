@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "test:health": "tsx --test src/lib/project-health.test.ts",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

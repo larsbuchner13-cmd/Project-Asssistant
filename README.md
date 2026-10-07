@@ -16,6 +16,31 @@ Alongside per-project frameworks, PM Copilot also ships a lightweight,
 **company-wide Process/Workflow module** ("Prozesse", ClickUp-style) — see
 [Processes](#processes-company-wide-workflow-os) below.
 
+## Project Health Check
+
+Open **Monitoring & Controlling → Project Health Check** inside a project.
+The score works without an API key or database migration. It is a transparent
+heuristic of recorded schedule, budget, risk and issue data, not project completion
+or a probability of success. Missing dimensions are excluded and coverage is shown
+separately; an empty project has no score. The screen documents weights and formulas.
+Scrum deadlines come from sprint-assigned backlog items and milestones. Cost totals
+follow the existing budget view (all work packages); avoid duplicate parent/child costs.
+This first version does not forecast costs, measure velocity, or store score history.
+
+Optional AI explanations use the OpenAI Responses API with Structured Outputs:
+https://developers.openai.com/api/docs/guides/structured-outputs
+Set `OPENAI_API_KEY` and `OPENAI_HEALTH_MODEL` on the server (e.g. Vercel environment
+settings) to enable the button. Choose a model available in your OpenAI account
+that supports Responses and strict JSON-schema output. No model is silently selected.
+Never prefix these variables with `NEXT_PUBLIC_` or commit an API key.
+The AI runs only on an explicit button click and receives aggregated metrics, not
+project names, descriptions, personal data or credentials. Requests use `store: false`.
+It cannot change the score. The page and action enforce project access and the action
+recomputes metrics server-side. Provider errors leave the local score usable.
+API calls incur provider costs; configure account spending controls before enabling
+this for users. Live provider/database integration requires deployment credentials;
+`npm run test:health` exercises scoring and mocked provider responses without them.
+
 ## Tech stack
 
 - Next.js 14 (App Router, TypeScript)

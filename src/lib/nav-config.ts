@@ -62,6 +62,7 @@ export function getProjectNavGroups(framework: Framework): NavGroup[] {
     {
       key: "monitoring",
       items: [
+        { key: "healthCheck", href: link("monitoring/health-check"), available: true },
         { key: "statusReport", href: link("monitoring/status-report"), available: true },
         { key: "raid", href: link("monitoring/raid"), available: true },
         { key: "changeRequests", href: link("monitoring/change-requests"), available: true },

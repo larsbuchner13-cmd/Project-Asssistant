@@ -1,7 +1,15 @@
+import { randomBytes } from "crypto";
+
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
+
+// Guards against ever creating well-known demo accounts on a real database:
+// this seed is for local/dev use only.
+if (process.env.NODE_ENV === "production") {
+  throw new Error("Refusing to run the demo seed against a production environment.");
+}
 
 function daysFromNow(days: number) {
   const d = new Date();
@@ -11,7 +19,10 @@ function daysFromNow(days: number) {
 }
 
 async function seedUsers() {
-  const password = await bcrypt.hash("changeme123", 12);
+  // Generated fresh on every run instead of a fixed, publicly-known
+  // password so a seeded database never ships with guessable credentials.
+  const rawPassword = randomBytes(9).toString("base64url");
+  const password = await bcrypt.hash(rawPassword, 12);
 
   const admin = await prisma.user.upsert({
     where: { email: "admin@pmcopilot.local" },
@@ -37,7 +48,7 @@ async function seedUsers() {
     },
   });
 
-  return { admin, member };
+  return { admin, member, rawPassword };
 }
 
 async function seedPmbokProject(ownerId: string) {
@@ -679,13 +690,14 @@ async function seedProcesses(admin: { id: string }, member: { id: string }) {
 
 async function main() {
   console.log("Seeding database...");
-  const { admin, member } = await seedUsers();
+  const { admin, member, rawPassword } = await seedUsers();
   await seedPmbokProject(admin.id);
   await seedPrince2Project(admin.id);
   await seedScrumProject(member.id);
   await seedProcesses(admin, member);
   console.log("Seed complete.");
-  console.log("Login as admin@pmcopilot.local / member@pmcopilot.local, password: changeme123");
+  console.log(`Login as admin@pmcopilot.local / member@pmcopilot.local, password: ${rawPassword}`);
+  console.log("This password was generated for this run only — it is not stored anywhere else.");
 }
 
 main()

@@ -1,3 +1,4 @@
+import { requireProjectAccess } from "@/lib/authz";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 
@@ -7,7 +8,9 @@ import { RiskTable } from "@/components/planning/risk-table";
 import { RiskFormDialog } from "@/components/planning/risk-form-dialog";
 import { Card, CardContent } from "@/components/ui/card";
 
-export default async function RisksPage({ params: { projectId } }: { params: { projectId: string } }) {
+export default async function RisksPage({ params, }: { params: Promise<{ projectId: string }> }) {
+  const { projectId } = await params;
+  await requireProjectAccess(projectId);
   const t = await getTranslations("risks");
 
   const project = await prisma.project.findUnique({

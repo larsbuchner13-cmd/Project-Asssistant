@@ -17,13 +17,13 @@ export async function createDependency(projectId: string, values: DependencyForm
 export async function updateDependency(projectId: string, id: string, values: DependencyFormValues) {
   await requireProjectAccess(projectId);
   const parsed = dependencyFormSchema.parse(values);
-  const dependency = await prisma.dependency.update({ where: { id }, data: parsed });
+  const dependency = await prisma.dependency.update({ where: { id, projectId }, data: parsed });
   revalidatePath(`/projects/${projectId}/monitoring/raid`);
   return dependency;
 }
 
 export async function deleteDependency(projectId: string, id: string) {
   await requireProjectAccess(projectId);
-  await prisma.dependency.delete({ where: { id } });
+  await prisma.dependency.delete({ where: { id, projectId } });
   revalidatePath(`/projects/${projectId}/monitoring/raid`);
 }

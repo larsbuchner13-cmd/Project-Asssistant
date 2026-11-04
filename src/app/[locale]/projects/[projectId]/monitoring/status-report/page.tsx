@@ -1,3 +1,4 @@
+import { requireProjectAccess } from "@/lib/authz";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 
@@ -7,7 +8,9 @@ import { StatusReportView } from "@/components/monitoring/status-report-view";
 import { GenerateReportButton } from "@/components/monitoring/generate-report-button";
 import { computeBudgetBurnPct } from "@/app/[locale]/actions/status-reports";
 
-export default async function StatusReportPage({ params: { projectId } }: { params: { projectId: string } }) {
+export default async function StatusReportPage({ params, }: { params: Promise<{ projectId: string }> }) {
+  const { projectId } = await params;
+  await requireProjectAccess(projectId);
   const t = await getTranslations("statusReport");
 
   const project = await prisma.project.findUnique({ where: { id: projectId } });

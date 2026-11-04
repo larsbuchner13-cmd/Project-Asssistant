@@ -91,24 +91,22 @@ export async function createProcessStep(templateId: string, values: ProcessStepF
 export async function updateProcessStep(templateId: string, stepId: string, values: ProcessStepFormValues) {
   await requireTemplateEditAccess(templateId);
   const parsed = processStepFormSchema.parse(values);
-  await prisma.$transaction([
-    prisma.processChecklistTemplateItem.deleteMany({ where: { stepId } }),
-    prisma.processStepTemplate.update({
-      where: { id: stepId },
+  await prisma.processStepTemplate.update({
+      where: { id: stepId, templateId },
       data: {
         ...toStepData(parsed),
         checklistItems: {
+          deleteMany: {},
           create: parsed.checklistLabels.map((label, index) => ({ label, order: index })),
         },
       },
-    }),
-  ]);
+    });
   revalidate(templateId);
 }
 
 export async function deleteProcessStep(templateId: string, stepId: string) {
   await requireTemplateEditAccess(templateId);
-  await prisma.processStepTemplate.delete({ where: { id: stepId } });
+  await prisma.processStepTemplate.delete({ where: { id: stepId, templateId } });
   const remaining = await prisma.processStepTemplate.findMany({
     where: { templateId },
     orderBy: { order: "asc" },

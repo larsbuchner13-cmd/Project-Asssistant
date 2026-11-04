@@ -44,12 +44,12 @@ export async function createChecklistItem(projectId: string, values: ClosureChec
 
 export async function toggleChecklistItem(projectId: string, id: string, done: boolean) {
   await requireProjectAccess(projectId);
-  await prisma.closureChecklistItem.update({ where: { id }, data: { done } });
+  await prisma.closureChecklistItem.update({ where: { id, projectId }, data: { done } });
   revalidatePath(`/projects/${projectId}/closing/checklist`);
 }
 
 export async function deleteChecklistItem(projectId: string, id: string) {
   await requireProjectAccess(projectId);
-  await prisma.closureChecklistItem.delete({ where: { id } });
+  await prisma.closureChecklistItem.delete({ where: { id, projectId } });
   revalidatePath(`/projects/${projectId}/closing/checklist`);
 }

@@ -1,3 +1,4 @@
+import { requireProjectAccess } from "@/lib/authz";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 
@@ -5,7 +6,9 @@ import { prisma } from "@/lib/prisma";
 import { FrameworkGuide } from "@/components/framework-guide";
 import { ToleranceForm } from "@/components/prince2/tolerance-form";
 
-export default async function TolerancesPage({ params: { projectId } }: { params: { projectId: string } }) {
+export default async function TolerancesPage({ params, }: { params: Promise<{ projectId: string }> }) {
+  const { projectId } = await params;
+  await requireProjectAccess(projectId);
   const t = await getTranslations("tolerances");
 
   const project = await prisma.project.findUnique({

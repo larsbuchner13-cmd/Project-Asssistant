@@ -104,7 +104,7 @@ function StepCard({ step, disabled }: { step: RunStepData; disabled: boolean }) 
                 <label key={item.id} className="flex items-center gap-2 text-sm">
                   <Checkbox
                     checked={item.done}
-                    disabled={disabled || step.status === "DONE"}
+                    disabled={disabled || step.status === "DONE" || step.approvalStatus === "PENDING"}
                     onCheckedChange={(checked) => toggleRunChecklistItem(step.id, item.id, !!checked)}
                   />
                   <span className={item.done ? "text-muted-foreground line-through" : ""}>{item.label}</span>

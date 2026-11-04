@@ -60,6 +60,6 @@ export async function generateStatusReport(projectId: string, locale: string) {
 
 export async function deleteStatusReport(projectId: string, reportId: string) {
   await requireProjectAccess(projectId);
-  await prisma.statusReport.delete({ where: { id: reportId } });
+  await prisma.statusReport.delete({ where: { id: reportId, projectId } });
   revalidatePath(`/projects/${projectId}/monitoring/status-report`);
 }

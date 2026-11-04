@@ -1,3 +1,4 @@
+import { requireProjectAccess } from "@/lib/authz";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 
@@ -8,12 +9,14 @@ import { SprintSelector } from "@/components/scrum/sprint-selector";
 import { Card, CardContent } from "@/components/ui/card";
 
 export default async function BurndownPage({
-  params: { projectId },
+  params,
   searchParams,
 }: {
-  params: { projectId: string };
-  searchParams: { sprintId?: string };
+  params: Promise<{ projectId: string }>;
+  searchParams: Promise<{ sprintId?: string }>;
 }) {
+  const { projectId } = await params;
+  await requireProjectAccess(projectId);
   const t = await getTranslations("burndown");
   const tp = await getTranslations("sprintPlanning");
 
@@ -21,7 +24,7 @@ export default async function BurndownPage({
   if (!project) notFound();
 
   const sprints = await prisma.sprint.findMany({ where: { projectId }, orderBy: { startDate: "desc" } });
-  const selectedSprintId = searchParams.sprintId ?? sprints[0]?.id;
+  const selectedSprintId = (await searchParams).sprintId ?? sprints[0]?.id;
   const selectedSprint = sprints.find((s) => s.id === selectedSprintId);
 
   const items = selectedSprintId

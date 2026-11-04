@@ -1,3 +1,4 @@
+import { requireProjectAccess } from "@/lib/authz";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 
@@ -9,7 +10,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 
-export default async function ChangeRequestsPage({ params: { projectId } }: { params: { projectId: string } }) {
+export default async function ChangeRequestsPage({ params, }: { params: Promise<{ projectId: string }> }) {
+  const { projectId } = await params;
+  await requireProjectAccess(projectId);
   const t = await getTranslations("changeRequests");
 
   const project = await prisma.project.findUnique({ where: { id: projectId } });

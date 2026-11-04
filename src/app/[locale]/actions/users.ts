@@ -5,6 +5,7 @@ import type { Role, UserStatus } from "@prisma/client";
 
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/authz";
+import { z } from "zod";
 
 export type AdminActionResult = { ok: true } | { ok: false; error: "admin.cannotModifySelf" };
 
@@ -13,18 +14,20 @@ export type AdminActionResult = { ok: true } | { ok: false; error: "admin.cannot
 // would never reach the client.
 export async function setUserStatus(userId: string, status: UserStatus): Promise<AdminActionResult> {
   const admin = await requireAdmin();
+  z.enum(["PENDING", "ACTIVE", "DISABLED"]).parse(status);
   if (userId === admin.id) return { ok: false, error: "admin.cannotModifySelf" };
 
-  await prisma.user.update({ where: { id: userId }, data: { status } });
+  await prisma.user.update({ where: { id: userId }, data: { status, sessionVersion: { increment: 1 } } });
   revalidatePath("/admin/users");
   return { ok: true };
 }
 
 export async function setUserRole(userId: string, role: Role): Promise<AdminActionResult> {
   const admin = await requireAdmin();
+  z.enum(["ADMIN", "USER"]).parse(role);
   if (userId === admin.id) return { ok: false, error: "admin.cannotModifySelf" };
 
-  await prisma.user.update({ where: { id: userId }, data: { role } });
+  await prisma.user.update({ where: { id: userId }, data: { role, sessionVersion: { increment: 1 } } });
   revalidatePath("/admin/users");
   return { ok: true };
 }

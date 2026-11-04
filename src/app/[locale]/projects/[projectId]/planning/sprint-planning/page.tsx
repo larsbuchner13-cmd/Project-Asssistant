@@ -1,3 +1,4 @@
+import { requireProjectAccess } from "@/lib/authz";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { Plus } from "lucide-react";
@@ -8,7 +9,9 @@ import { SprintPlanningView } from "@/components/scrum/sprint-planning-view";
 import { SprintFormDialog } from "@/components/scrum/sprint-form-dialog";
 import { Button } from "@/components/ui/button";
 
-export default async function SprintPlanningPage({ params: { projectId } }: { params: { projectId: string } }) {
+export default async function SprintPlanningPage({ params, }: { params: Promise<{ projectId: string }> }) {
+  const { projectId } = await params;
+  await requireProjectAccess(projectId);
   const t = await getTranslations("sprintPlanning");
 
   const project = await prisma.project.findUnique({ where: { id: projectId } });

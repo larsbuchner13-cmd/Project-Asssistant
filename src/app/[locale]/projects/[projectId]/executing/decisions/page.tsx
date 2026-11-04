@@ -1,3 +1,4 @@
+import { requireProjectAccess } from "@/lib/authz";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { Plus } from "lucide-react";
@@ -8,7 +9,9 @@ import { DecisionList } from "@/components/executing/decision-list";
 import { DecisionFormDialog } from "@/components/executing/decision-form-dialog";
 import { Button } from "@/components/ui/button";
 
-export default async function DecisionsPage({ params: { projectId } }: { params: { projectId: string } }) {
+export default async function DecisionsPage({ params, }: { params: Promise<{ projectId: string }> }) {
+  const { projectId } = await params;
+  await requireProjectAccess(projectId);
   const t = await getTranslations("decisions");
 
   const project = await prisma.project.findUnique({ where: { id: projectId } });

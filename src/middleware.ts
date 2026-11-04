@@ -23,8 +23,9 @@ export default async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const { locale, path } = stripLocale(pathname);
 
-  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-  const isAuthenticated = !!token;
+  // Invalid tokens (including malformed Bearer headers) are unauthenticated.
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET }).catch(() => null);
+  const isAuthenticated = !!token?.id;
   const isActive = token?.status === "ACTIVE";
   const isAdmin = token?.role === "ADMIN";
 

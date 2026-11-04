@@ -172,6 +172,7 @@
     "totalActual": "Total Actual"
   },
   "validation": {
+    "passwordTooLong": "The password must be at most 72 UTF-8 bytes long.",
     "required": "This field is required",
     "minLength": "Too short",
     "minLength8": "At least 8 characters",

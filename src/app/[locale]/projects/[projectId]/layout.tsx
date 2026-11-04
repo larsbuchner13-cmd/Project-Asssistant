@@ -6,11 +6,12 @@ import { ProjectSidebar } from "@/components/layout/project-sidebar";
 
 export default async function ProjectLayout({
   children,
-  params: { projectId },
+  params,
 }: {
   children: React.ReactNode;
-  params: { projectId: string; locale: string };
+  params: Promise<{ projectId: string; locale: string }>;
 }) {
+  const { projectId } = await params;
   try {
     await requireProjectAccess(projectId);
   } catch (e) {

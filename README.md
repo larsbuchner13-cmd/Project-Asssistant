@@ -43,7 +43,7 @@ this for users. Live provider/database integration requires deployment credentia
 
 ## Tech stack
 
-- Next.js 14 (App Router, TypeScript)
+- Next.js 15 (App Router, TypeScript)
 - Prisma ORM + PostgreSQL (Neon-compatible)
 - Tailwind CSS + hand-rolled shadcn/ui-style components (Radix primitives)
 - next-intl (German default, English secondary)
@@ -52,6 +52,36 @@ this for users. Live provider/database integration requires deployment credentia
 - NextAuth (Credentials) + bcryptjs for authentication and user management
 
 ## Setup
+
+### Security update (November 2026)
+
+Before deploying this version, run `npx prisma migrate deploy` against the target
+database. The additive migration introduces `User.sessionVersion` and shared
+rate-limit counters. Do not run the new application against the old schema.
+Existing sessions are invalidated once; users must sign in again. Password,
+role and account-status changes also invalidate prior sessions.
+
+Limits are shared across serverless instances: 10 login attempts per email per
+15 minutes, 5 registrations per email per hour, 30 registrations globally per
+hour, and 10 AI health analyses per user per hour. Counters store digests and
+expired windows are cleaned up on subsequent requests. These are application
+quotas, not a replacement for deployment-level traffic protection.
+
+`npm test` runs health tests and isolated security regression tests with an
+in-memory database substitute. They cover both permitted and denied operations,
+including rollback of mixed-project batch changes. They do not replace tests
+against PostgreSQL. Before production rollout, apply the migration on a separate
+test database and verify sign-in, registration, password changes, approvals,
+project edits and workflow transitions with two separate user accounts.
+
+Demo seeding is disabled on Vercel and in production. Existing seeded accounts
+are not changed automatically: an operator must rotate any demo credentials
+already present in a deployed database.
+
+Transitive dependency overrides keep Next.js's PostCSS and Prisma's config merge
+utility on patched releases. Recheck these overrides when upgrading the parents.
+The CSP blocks framing, objects and foreign base URLs; it does not yet implement
+a nonce-based script policy.
 
 ### 1. Install dependencies
 
@@ -141,8 +171,8 @@ Open [http://localhost:3000](http://localhost:3000) — you'll be redirected to
    the same `DIRECT_URL`) against the production database before or during
    your first deploy, and again after pulling any change that touches
    `prisma/schema.prisma`, so the schema stays in sync.
-4. Optionally run `npm run db:seed` once against the production database if
-   you want the demo projects there too.
+4. Create production accounts through registration and approval. Demo seeding is
+   restricted to a separate local development database.
 
 ## User management
 

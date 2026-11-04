@@ -1,3 +1,4 @@
+import { requireProjectAccess } from "@/lib/authz";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 
@@ -6,10 +7,12 @@ import { CharterForm } from "@/components/initiating/charter-form";
 import { FrameworkGuide } from "@/components/framework-guide";
 
 export default async function CharterPage({
-  params: { projectId },
+  params,
 }: {
-  params: { projectId: string };
+  params: Promise<{ projectId: string }>;
 }) {
+  const { projectId } = await params;
+  await requireProjectAccess(projectId);
   const t = await getTranslations("charter");
 
   const project = await prisma.project.findUnique({

@@ -17,13 +17,13 @@ export async function createRisk(projectId: string, values: RiskFormValues) {
 export async function updateRisk(projectId: string, riskId: string, values: RiskFormValues) {
   await requireProjectAccess(projectId);
   const parsed = riskFormSchema.parse(values);
-  const risk = await prisma.risk.update({ where: { id: riskId }, data: parsed });
+  const risk = await prisma.risk.update({ where: { id: riskId, projectId }, data: parsed });
   revalidatePath(`/projects/${projectId}/planning/risks`);
   return risk;
 }
 
 export async function deleteRisk(projectId: string, riskId: string) {
   await requireProjectAccess(projectId);
-  await prisma.risk.delete({ where: { id: riskId } });
+  await prisma.risk.delete({ where: { id: riskId, projectId } });
   revalidatePath(`/projects/${projectId}/planning/risks`);
 }

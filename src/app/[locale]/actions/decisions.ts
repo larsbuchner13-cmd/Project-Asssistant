@@ -42,16 +42,15 @@ export async function updateDecision(projectId: string, decisionId: string, valu
   await requireProjectAccess(projectId);
   const parsed = decisionFormSchema.parse(values);
 
-  await prisma.actionItem.deleteMany({ where: { decisionId } });
-
   const decision = await prisma.decision.update({
-    where: { id: decisionId },
+    where: { id: decisionId, projectId },
     data: {
       meetingDate: new Date(parsed.meetingDate),
       attendees: splitAttendees(parsed.attendees),
       notes: parsed.notes || "",
       decisionText: parsed.decisionText,
       actionItems: {
+        deleteMany: {},
         create: parsed.actionItems.map((item) => ({
           description: item.description,
           owner: item.owner,
@@ -67,12 +66,12 @@ export async function updateDecision(projectId: string, decisionId: string, valu
 
 export async function deleteDecision(projectId: string, decisionId: string) {
   await requireProjectAccess(projectId);
-  await prisma.decision.delete({ where: { id: decisionId } });
+  await prisma.decision.delete({ where: { id: decisionId, projectId } });
   revalidatePath(`/projects/${projectId}/executing/decisions`);
 }
 
 export async function toggleActionItem(projectId: string, actionItemId: string, done: boolean) {
   await requireProjectAccess(projectId);
-  await prisma.actionItem.update({ where: { id: actionItemId }, data: { done } });
+  await prisma.actionItem.update({ where: { id: actionItemId, decision: { projectId } }, data: { done } });
   revalidatePath(`/projects/${projectId}/executing/decisions`);
 }

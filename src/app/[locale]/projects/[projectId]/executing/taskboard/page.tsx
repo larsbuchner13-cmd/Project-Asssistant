@@ -1,3 +1,4 @@
+import { requireProjectAccess } from "@/lib/authz";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 
@@ -5,7 +6,9 @@ import { prisma } from "@/lib/prisma";
 import { FrameworkGuide } from "@/components/framework-guide";
 import { KanbanBoard } from "@/components/executing/kanban-board";
 
-export default async function TaskboardPage({ params: { projectId } }: { params: { projectId: string } }) {
+export default async function TaskboardPage({ params, }: { params: Promise<{ projectId: string }> }) {
+  const { projectId } = await params;
+  await requireProjectAccess(projectId);
   const t = await getTranslations("taskboard");
 
   const project = await prisma.project.findUnique({ where: { id: projectId } });

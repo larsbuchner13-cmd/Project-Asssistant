@@ -12,7 +12,8 @@ import { Link } from "@/i18n/navigation";
 
 export const dynamic = "force-dynamic";
 
-export default async function ProcessDashboardPage({ params: { locale } }: { params: { locale: string } }) {
+export default async function ProcessDashboardPage({ params, }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
   const t = await getTranslations("processes");
   await requireActiveUser();
 

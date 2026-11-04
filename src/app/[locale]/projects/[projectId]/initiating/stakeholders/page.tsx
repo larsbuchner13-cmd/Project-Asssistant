@@ -1,3 +1,4 @@
+import { requireProjectAccess } from "@/lib/authz";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 
@@ -9,10 +10,12 @@ import { StakeholderFormDialog } from "@/components/initiating/stakeholder-form-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default async function StakeholdersPage({
-  params: { projectId },
+  params,
 }: {
-  params: { projectId: string };
+  params: Promise<{ projectId: string }>;
 }) {
+  const { projectId } = await params;
+  await requireProjectAccess(projectId);
   const t = await getTranslations("stakeholders");
 
   const project = await prisma.project.findUnique({

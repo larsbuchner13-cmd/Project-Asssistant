@@ -1,3 +1,4 @@
+import { requireProjectAccess } from "@/lib/authz";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 
@@ -6,7 +7,9 @@ import { FrameworkGuide } from "@/components/framework-guide";
 import { RaidLog } from "@/components/monitoring/raid-log";
 import { Card, CardContent } from "@/components/ui/card";
 
-export default async function RaidPage({ params: { projectId } }: { params: { projectId: string } }) {
+export default async function RaidPage({ params, }: { params: Promise<{ projectId: string }> }) {
+  const { projectId } = await params;
+  await requireProjectAccess(projectId);
   const t = await getTranslations("raid");
 
   const project = await prisma.project.findUnique({ where: { id: projectId } });

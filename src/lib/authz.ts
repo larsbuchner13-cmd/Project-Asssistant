@@ -15,7 +15,7 @@ export type SessionUser = {
 /** Throws unless the caller is signed in and approved (status ACTIVE). */
 export async function requireActiveUser(): Promise<SessionUser> {
   const session = await getServerSession(authOptions);
-  if (!session?.user || session.user.status !== "ACTIVE") {
+  if (!session?.user?.id || session.user.status !== "ACTIVE") {
     throw new AuthzError("Not signed in or not yet approved.");
   }
   return session.user;

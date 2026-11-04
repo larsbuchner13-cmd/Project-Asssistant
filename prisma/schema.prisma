@@ -159,6 +159,7 @@ model User {
   password  String
   role      Role       @default(USER)
   status    UserStatus @default(PENDING)
+  sessionVersion Int   @default(0)
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
 
@@ -173,6 +174,16 @@ model User {
   processRunStepApproverOf ProcessRunStep[]      @relation("ProcessRunStepApprover")
 
   @@map("users")
+}
+
+// Shared fixed-window quotas; database-backed so serverless instances agree.
+model RateLimit {
+  id        String   @id
+  count     Int      @default(1)
+  expiresAt DateTime
+
+  @@index([expiresAt])
+  @@map("rate_limits")
 }
 
 // ---------------------------------------------------------------------------

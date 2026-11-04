@@ -33,7 +33,7 @@ export async function updateSprint(projectId: string, id: string, values: Sprint
   await requireProjectAccess(projectId);
   const parsed = sprintFormSchema.parse(values);
   const sprint = await prisma.sprint.update({
-    where: { id },
+    where: { id, projectId },
     data: {
       name: parsed.name,
       goal: parsed.goal || null,
@@ -47,6 +47,6 @@ export async function updateSprint(projectId: string, id: string, values: Sprint
 
 export async function deleteSprint(projectId: string, id: string) {
   await requireProjectAccess(projectId);
-  await prisma.sprint.delete({ where: { id } });
+  await prisma.sprint.delete({ where: { id, projectId } });
   revalidate(projectId);
 }

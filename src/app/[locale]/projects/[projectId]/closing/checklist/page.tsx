@@ -1,3 +1,4 @@
+import { requireProjectAccess } from "@/lib/authz";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 
@@ -6,7 +7,9 @@ import { FrameworkGuide } from "@/components/framework-guide";
 import { ClosureChecklist } from "@/components/closing/closure-checklist";
 import { ensureDefaultChecklist } from "@/app/[locale]/actions/closure-checklist";
 
-export default async function ClosureChecklistPage({ params: { projectId } }: { params: { projectId: string } }) {
+export default async function ClosureChecklistPage({ params, }: { params: Promise<{ projectId: string }> }) {
+  const { projectId } = await params;
+  await requireProjectAccess(projectId);
   const t = await getTranslations("closureChecklist");
 
   const project = await prisma.project.findUnique({ where: { id: projectId } });

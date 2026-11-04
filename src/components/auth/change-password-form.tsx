@@ -3,7 +3,8 @@
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { signOut } from "next-auth/react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,6 +17,7 @@ import { changePassword } from "@/app/[locale]/actions/auth";
 
 export function ChangePasswordForm() {
   const t = useTranslations();
+  const locale = useLocale();
   const [error, setError] = React.useState<string | null>(null);
   const [success, setSuccess] = React.useState(false);
 
@@ -45,6 +47,7 @@ export function ChangePasswordForm() {
 
     setSuccess(true);
     reset();
+    await signOut({ callbackUrl: `/${locale}/login` });
   }
 
   return (

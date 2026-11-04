@@ -1,6 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
+if (process.env.NODE_ENV === "production" || process.env.VERCEL) {
+  throw new Error("Demo seeding is disabled in deployed environments.");
+}
+
 const prisma = new PrismaClient();
 
 function daysFromNow(days: number) {

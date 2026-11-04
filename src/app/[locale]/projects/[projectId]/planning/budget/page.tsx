@@ -1,3 +1,4 @@
+import { requireProjectAccess } from "@/lib/authz";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 
@@ -5,7 +6,9 @@ import { prisma } from "@/lib/prisma";
 import { FrameworkGuide } from "@/components/framework-guide";
 import { BudgetTable } from "@/components/planning/budget-table";
 
-export default async function BudgetPage({ params: { projectId } }: { params: { projectId: string } }) {
+export default async function BudgetPage({ params, }: { params: Promise<{ projectId: string }> }) {
+  const { projectId } = await params;
+  await requireProjectAccess(projectId);
   const t = await getTranslations("budget");
 
   const project = await prisma.project.findUnique({ where: { id: projectId } });

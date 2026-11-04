@@ -20,7 +20,7 @@ export async function updateIssue(projectId: string, id: string, values: IssueFo
   await requireProjectAccess(projectId);
   const parsed = issueFormSchema.parse(values);
   const issue = await prisma.issue.update({
-    where: { id },
+    where: { id, projectId },
     data: {
       description: parsed.description,
       impact: parsed.impact || null,
@@ -35,6 +35,6 @@ export async function updateIssue(projectId: string, id: string, values: IssueFo
 
 export async function deleteIssue(projectId: string, id: string) {
   await requireProjectAccess(projectId);
-  await prisma.issue.delete({ where: { id } });
+  await prisma.issue.delete({ where: { id, projectId } });
   revalidatePath(`/projects/${projectId}/monitoring/raid`);
 }

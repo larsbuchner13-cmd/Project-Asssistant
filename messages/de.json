@@ -172,6 +172,7 @@
     "totalActual": "Gesamt Ist"
   },
   "validation": {
+    "passwordTooLong": "Das Passwort darf höchstens 72 UTF-8-Bytes lang sein.",
     "required": "Dieses Feld ist erforderlich",
     "minLength": "Zu kurz",
     "minLength8": "Mindestens 8 Zeichen",

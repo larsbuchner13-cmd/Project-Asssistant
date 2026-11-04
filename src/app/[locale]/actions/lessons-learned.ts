@@ -26,13 +26,13 @@ export async function createLessonLearned(projectId: string, values: LessonLearn
 export async function updateLessonLearned(projectId: string, id: string, values: LessonLearnedFormValues) {
   await requireProjectAccess(projectId);
   const parsed = lessonLearnedFormSchema.parse(values);
-  const lesson = await prisma.lessonLearned.update({ where: { id }, data: toData(parsed) });
+  const lesson = await prisma.lessonLearned.update({ where: { id, projectId }, data: toData(parsed) });
   revalidatePath(`/projects/${projectId}/closing/lessons-learned`);
   return lesson;
 }
 
 export async function deleteLessonLearned(projectId: string, id: string) {
   await requireProjectAccess(projectId);
-  await prisma.lessonLearned.delete({ where: { id } });
+  await prisma.lessonLearned.delete({ where: { id, projectId } });
   revalidatePath(`/projects/${projectId}/closing/lessons-learned`);
 }

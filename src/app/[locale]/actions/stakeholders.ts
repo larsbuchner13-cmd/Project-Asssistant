@@ -22,7 +22,7 @@ export async function updateStakeholder(
   await requireProjectAccess(projectId);
   const parsed = stakeholderFormSchema.parse(values);
   const stakeholder = await prisma.stakeholder.update({
-    where: { id: stakeholderId },
+    where: { id: stakeholderId, projectId },
     data: parsed,
   });
   revalidatePath(`/projects/${projectId}/initiating/stakeholders`);
@@ -31,6 +31,6 @@ export async function updateStakeholder(
 
 export async function deleteStakeholder(projectId: string, stakeholderId: string) {
   await requireProjectAccess(projectId);
-  await prisma.stakeholder.delete({ where: { id: stakeholderId } });
+  await prisma.stakeholder.delete({ where: { id: stakeholderId, projectId } });
   revalidatePath(`/projects/${projectId}/initiating/stakeholders`);
 }

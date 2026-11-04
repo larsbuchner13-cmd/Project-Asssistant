@@ -19,9 +19,9 @@ const statusVariant = { ACTIVE: "amber", COMPLETED: "green", CANCELLED: "outline
 export default async function ProcessRunDetailPage({
   params,
 }: {
-  params: { runId: string; locale: string };
+  params: Promise<{ runId: string; locale: string }>;
 }) {
-  const { runId, locale } = params;
+  const { runId, locale } = await params;
   const t = await getTranslations("processes.run");
   await requireActiveUser();
 
@@ -33,7 +33,7 @@ export default async function ProcessRunDetailPage({
       project: { select: { name: true } },
       steps: {
         orderBy: { order: "asc" },
-        include: { assignee: true, approver: true, checklistItems: { orderBy: { order: "asc" } } },
+        include: { assignee: { select: { id: true, name: true } }, approver: { select: { id: true, name: true } }, checklistItems: { orderBy: { order: "asc" } } },
       },
     },
   });

@@ -29,13 +29,13 @@ export async function createChangeRequest(projectId: string, values: ChangeReque
 export async function updateChangeRequest(projectId: string, id: string, values: ChangeRequestFormValues) {
   await requireProjectAccess(projectId);
   const parsed = changeRequestFormSchema.parse(values);
-  const cr = await prisma.changeRequest.update({ where: { id }, data: toData(parsed) });
+  const cr = await prisma.changeRequest.update({ where: { id, projectId }, data: toData(parsed) });
   revalidatePath(`/projects/${projectId}/monitoring/change-requests`);
   return cr;
 }
 
 export async function deleteChangeRequest(projectId: string, id: string) {
   await requireProjectAccess(projectId);
-  await prisma.changeRequest.delete({ where: { id } });
+  await prisma.changeRequest.delete({ where: { id, projectId } });
   revalidatePath(`/projects/${projectId}/monitoring/change-requests`);
 }

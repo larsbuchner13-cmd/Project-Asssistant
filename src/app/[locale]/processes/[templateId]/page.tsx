@@ -13,17 +13,17 @@ import { ChevronLeft, Plus } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
-export default async function TemplateDetailPage({ params }: { params: { templateId: string } }) {
+export default async function TemplateDetailPage({ params }: { params: Promise<{ templateId: string }> }) {
   const t = await getTranslations("processes");
   const user = await requireActiveUser();
 
   const template = await prisma.processTemplate.findUnique({
-    where: { id: params.templateId },
+    where: { id: (await params).templateId },
     include: {
       createdBy: { select: { name: true } },
       steps: {
         orderBy: { order: "asc" },
-        include: { checklistItems: { orderBy: { order: "asc" } }, assignee: true, approver: true },
+        include: { checklistItems: { orderBy: { order: "asc" } }, assignee: { select: { id: true, name: true } }, approver: { select: { id: true, name: true } } },
       },
     },
   });
